@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sriracha&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hold my heart 🤍</title>
 
@@ -80,6 +81,47 @@
       margin-top: 20px;
       opacity: 0.6;
     }
+
+    /* letter overlay */
+    #letterWrap {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.6s;
+    }
+
+    #letterWrap.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .letter {
+      transform: translateY(40px) scale(0.9);
+      transition: 0.7s;
+    }
+
+    #letterWrap.show .letter {
+      transform: translateY(0) scale(1);
+    }
+
+    /* paper */
+    .paper {
+      width: 320px;
+      background: #fffaf4;
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+      font-family: "Sriracha", cursive;
+      color: #5a3e2b;
+      line-height: 1.7;
+      font-size: 18px;
+    }
   </style>
 </head>
 
@@ -104,6 +146,28 @@
       <!-- รูป -->
       <div class="photo" id="photo">
         <img src="mf.jpg">
+        <div id="letterWrap">
+          <div class="letter">
+            <div class="paper">
+              บี๋คั้บ 🤍<br><br>
+              ขอบคุณที่กดหัวใจดวงนี้จนเต็มนะ<br>
+              เหมือนที่เธอค่อยๆเติมเต็มชีวิตเค้าเลย<br><br>
+
+              ตั้งแต่วันแรกจนถึงวันนี้
+              มันมีความสุขมากจริงๆนะที่มีเธออยู่ข้างๆ
+              และเค้าอยากให้ทุกวันหลังจากนี้
+              ยังมีเธออยู่ตรงนี้เหมือนเดิม<br><br>
+
+              ไม่ว่าจะปีไหน
+              ไม่ว่าจะเกิดอะไร
+              เค้าก็จะอยู่ข้างเธอแบบนี้แหละ<br><br>
+
+              รักเธอมากนะ
+              – จากคนที่อยากอยู่กับเธอไปนานๆ 💍
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -151,6 +215,18 @@
     /* mobile */
     holdArea.ontouchstart = startHold;
     holdArea.ontouchend = stopHold;
+  </script>
+
+  <script>
+    function reveal() {
+      photo.classList.add("show");
+
+      // 3 วิ แล้วจดหมายขึ้น
+      setTimeout(() => {
+        document.getElementById("letterWrap").classList.add("show");
+      }, 3000);
+    }
+
   </script>
 
 </body>
