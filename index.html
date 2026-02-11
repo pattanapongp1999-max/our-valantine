@@ -28,7 +28,7 @@
             touch-action: manipulation;
         }
 
-        /* พื้นหลังละอองหัวใจ */
+        /* Particles effect container */
         #particles {
             position: fixed;
             top: 0;
@@ -45,9 +45,13 @@
             width: 90%;
             max-width: 420px;
             padding: 20px;
+            height: 90vh;
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
         }
+        .wrap::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 
-        /* หัวใจสไตล์ใหม่: สวยงามและนุ่มนวล */
+        /* HEART AREA */
         .heart-area {
             width: 180px;
             height: 180px;
@@ -57,6 +61,7 @@
             filter: drop-shadow(0 0 30px rgba(255, 117, 143, 0.4));
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
         }
 
         .heart-area:active {
@@ -69,7 +74,6 @@
             display: block;
         }
 
-        /* เส้นขอบหัวใจแบบ Neon Soft */
         .outline {
             fill: rgba(255, 255, 255, 0.03);
             stroke: rgba(255, 255, 255, 0.4);
@@ -78,20 +82,19 @@
             stroke-linejoin: round;
         }
 
-        /* สีเติมหัวใจแบบ Gradient */
         .fill {
             fill: url(#heartGradient);
             clip-path: inset(100% 0 0 0);
             transition: clip-path 0.1s linear;
         }
 
-        /* เอฟเฟกต์แสงวิ้งภายในหัวใจ */
         .heart-glow {
             fill: white;
             opacity: 0.15;
             pointer-events: none;
         }
 
+        /* PHOTO SECTION */
         .photo {
             opacity: 0;
             transform: scale(0.7) rotate(-3deg);
@@ -114,6 +117,7 @@
             box-shadow: 0 15px 45px rgba(0,0,0,0.6);
         }
 
+        /* LETTER SECTION */
         #letter {
             max-height: 0;
             overflow: hidden;
@@ -121,11 +125,10 @@
         }
 
         #letter.show {
-            max-height: 800px;
+            max-height: 1000px;
             margin-top: 30px;
         }
 
-        /* กระดาษสไตล์จดหมายรักพรีเมียม */
         .paper {
             background: #fff;
             background-image: linear-gradient(rgba(255,255,255,.5) 50%, #f9f9f9 50%);
@@ -142,6 +145,7 @@
                 0 20px 40px rgba(0,0,0,0.3),
                 inset 0 0 100px rgba(0,0,0,0.02);
             position: relative;
+            margin-bottom: 50px;
         }
 
         .paper::after {
@@ -208,10 +212,10 @@
                         <stop offset="100%" style="stop-color:#ff4d6d;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <!-- ปรับพิกัดหัวใจให้ดูนุ่มนวลแบบ Smooth Curve -->
+                <!-- Smooth symmetrical heart path -->
                 <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 <path id="fill" class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                <!-- แสงไฮไลท์ที่ช่วยให้หัวใจดูมีมิติ -->
+                <!-- Subtle highlight -->
                 <path class="heart-glow" d="M65,35 C55,35 35,45 35,70 C35,85 50,105 50,105 L55,100 C55,100 45,85 45,70 C45,55 55,45 65,45 Z" />
             </svg>
         </div>
@@ -228,8 +232,9 @@
                 ขอบคุณที่กดหัวใจจนเต็มนะ<br>
                 เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
                 สุขสันต์วันวาเลนไทน์นะคั้บ<br>
-                รักเธอที่สุดในโลกเลย!
+                เค้ารักเธอมากที่สุดเลย!
             </div>
+            <div style="height: 30px;"></div>
         </div>
     </div>
 
@@ -246,7 +251,7 @@
     let done = false;
     let particleInterval;
 
-    const emojis = ["❤", "💖", "🌸", "✨", "☁️", "🤍"];
+    const emojis = ["❤", "💖", "🌸", "✨", "🤍", "🌷"];
 
     function createParticle(isSpecial = false) {
         const p = document.createElement("div");
@@ -263,14 +268,13 @@
         setTimeout(() => p.remove(), duration * 1000);
     }
 
-    // สร้างละอองเบาๆ ตลอดเวลา
-    setInterval(createParticle, 600);
+    // Background floating particles
+    setInterval(createParticle, 700);
 
     function start(e) {
         if(done) return;
         if(e.cancelable) e.preventDefault();
         pressing = true;
-        // เมื่อกดค้าง ให้ละอองออกมาเยอะขึ้น
         particleInterval = setInterval(() => createParticle(true), 150);
     }
 
@@ -279,7 +283,7 @@
         clearInterval(particleInterval);
     }
 
-    // ลอจิกการเติมสีหัวใจ
+    // Heart filling logic
     setInterval(() => {
         if (!pressing || done) return;
 
@@ -292,12 +296,12 @@
             done = true;
             pressing = false;
             clearInterval(particleInterval);
-            showEffects();
+            showFinal();
         }
     }, 30);
 
-    function showEffects() {
-        // เอฟเฟกต์พลุหัวใจเมื่อเต็ม
+    function showFinal() {
+        // Burst effects
         for(let i=0; i<40; i++) {
             setTimeout(() => createParticle(true), i * 40);
         }
@@ -313,6 +317,7 @@
         }, 1600);
     }
 
+    // Event listeners
     hold.addEventListener("mousedown", start);
     window.addEventListener("mouseup", stop);
     hold.addEventListener("touchstart", start, {passive: false});
