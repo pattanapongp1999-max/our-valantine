@@ -1,179 +1,299 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
-<title>For you 🤍</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+    <title>For My Valentine 🤍</title>
 
-<style>
-body{
-  margin:0;
-  height:100vh;
-  background:#0e0e13;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:sans-serif;
-  color:white;
-  overflow:hidden;
-}
+    <style>
+        :root {
+            --primary-pink: #ff4d6d;
+            --soft-pink: #ffccd5;
+            --dark-bg: #1a1a1d;
+        }
 
-.wrap{text-align:center}
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle, #2c1a1d 0%, #0e0e13 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Sriracha', cursive, sans-serif;
+            color: white;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
 
-/* HEART */
-.heart-area{
-  width:220px;
-  height:220px;
-  margin:auto;
-  cursor:pointer;
-  position:relative;
-}
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-svg{width:100%;height:100%}
+        .wrap {
+            text-align: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+        }
 
-.outline{
-  fill:none;
-  stroke:white;
-  stroke-width:6;
-  opacity:.5;
-}
+        /* HEART AREA - ปรับแก้ให้สมดุลและอยู่กึ่งกลาง */
+        .heart-area {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 20px;
+            cursor: pointer;
+            position: relative;
+            filter: drop-shadow(0 0 20px rgba(255, 77, 109, 0.5));
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.fill{
-  fill:#ff4d6d;
-  clip-path:inset(100% 0 0 0);
-}
+        .heart-area:active {
+            transform: scale(0.95);
+        }
 
-/* PHOTO */
-.photo{
-  opacity:0;
-  transform:scale(.7);
-  transition:1s;
-  margin-top:20px;
-}
+        svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
 
-.photo.show{
-  opacity:1;
-  transform:scale(1);
-}
+        /* Path ใหม่ที่วาดให้สมมาตรและอยู่กลางพิกัดพอดี */
+        .outline {
+            fill: rgba(255, 255, 255, 0.05);
+            stroke: white;
+            stroke-width: 20; /* เพิ่มความหนาของขอบ */
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.8;
+        }
 
-.photo img{
-  width:260px;
-  border-radius:18px;
-}
+        .fill {
+            fill: var(--primary-pink);
+            clip-path: inset(100% 0 0 0);
+            transition: clip-path 0.1s linear;
+        }
 
-/* LETTER */
-#letter{
-  max-height:0;
-  overflow:hidden;
-  transition:1s;
-}
+        .photo {
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 10px;
+            display: none; 
+        }
 
-#letter.show{
-  max-height:400px;
-  margin-top:20px;
-}
+        .photo.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
 
-.paper{
-  background:#fffaf4;
-  color:#5a3e2b;
-  padding:25px;
-  border-radius:14px;
-  font-family:"Sriracha",cursive;
-  opacity:0;
-  transform:translateY(30px);
-  transition:.8s;
-}
+        .photo img {
+            width: 100%;
+            max-width: 280px;
+            border-radius: 24px;
+            border: 4px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-#letter.show .paper{
-  opacity:1;
-  transform:translateY(0);
-}
+        #letter {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-in-out;
+        }
 
-.hint{
-  margin-top:20px;
-  color:#aaa;
-  transition:.4s;
-}
-.hint.hide{opacity:0}
-</style>
+        #letter.show {
+            max-height: 600px;
+            margin-top: 25px;
+        }
+
+        .paper {
+            background: #fffaf4;
+            color: #5a3e2b;
+            padding: 30px 20px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 1s ease-out 0.5s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2), inset 0 0 40px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .paper::before {
+            content: "♥";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: var(--primary-pink);
+            font-size: 1.2rem;
+            opacity: 0.3;
+        }
+
+        #letter.show .paper {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hint {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--soft-pink);
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+
+        .hint.hide {
+            display: none;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: var(--primary-pink);
+            user-select: none;
+            pointer-events: none;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="wrap">
+    <div id="particles"></div>
 
-<div class="heart-area" id="hold">
-<svg viewBox="0 0 512 512">
-<path class="outline" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
-24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z"/>
+    <div class="wrap">
+        <div class="heart-area" id="hold">
+            <!-- ปรับ viewBox เป็น 0 0 100 100 เพื่อให้คำนวณง่ายและใช้พิกัดที่สมมาตรที่สุด -->
+            <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+                <!-- Path หัวใจใหม่ที่วาดให้สมดุลซ้ายขวา -->
+                <path class="outline" d="M50,88 C50,88 10,60 10,35 C10,15 30,10 50,30 C70,10 90,15 90,35 C90,60 50,88 50,88 Z" />
+                <path id="fill" class="fill" d="M50,88 C50,88 10,60 10,35 C10,15 30,10 50,30 C70,10 90,15 90,35 C90,60 50,88 50,88 Z" />
+            </svg>
+        </div>
 
-<path id="fill" class="fill" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
-24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z"/>
-</svg>
-</div>
+        <div class="hint" id="hint">กดค้างที่หัวใจเติมความรัก 🤍</div>
 
-<div class="photo" id="photo">
-<img src="mf.jpg">
-</div>
+        <div class="photo" id="photo">
+            <!-- ใส่รูปของคุณตรงนี้ -->
+            <img src="https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=500&auto=format&fit=crop" onerror="this.src='https://via.placeholder.com/280x350?text=My+Valentine'">
+        </div>
 
-<div id="letter">
-<div class="paper">
-บี๋คั้บ 🤍<br><br>
-ขอบคุณที่กดหัวใจจนเต็มนะ<br>
-เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
-เค้ารักเธอมากนะ
-</div>
-</div>
-
-<div class="hint" id="hint">กดค้างที่หัวใจ 🤍</div>
-
-</div>
+        <div id="letter">
+            <div class="paper">
+                บี๋คั้บ 🤍<br><br>
+                ขอบคุณที่กดหัวใจจนเต็มนะ<br>
+                เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
+                สุขสันต์วันวาเลนไทน์นะคั้บ<br>
+                เค้ารักเธอมากนะ
+            </div>
+        </div>
+    </div>
 
 <script>
-const hold=document.getElementById("hold");
-const fill=document.getElementById("fill");
-const photo=document.getElementById("photo");
-const letter=document.getElementById("letter");
-const hint=document.getElementById("hint");
+    const hold = document.getElementById("hold");
+    const fill = document.getElementById("fill");
+    const photo = document.getElementById("photo");
+    const letter = document.getElementById("letter");
+    const hint = document.getElementById("hint");
+    const particlesContainer = document.getElementById("particles");
 
-let pressing=false;
-let value=0;
-let done=false;
+    let pressing = false;
+    let value = 0;
+    let done = false;
+    let particleInterval;
 
-function start(){pressing=true;}
-function stop(){pressing=false;}
+    function createParticle() {
+        const heart = document.createElement("div");
+        heart.className = "heart-particle";
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "100vh";
+        heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+        heart.style.opacity = Math.random();
+        
+        const duration = Math.random() * 3 + 3;
+        heart.style.animationDuration = duration + "s";
+        
+        particlesContainer.appendChild(heart);
+        setTimeout(() => heart.remove(), duration * 1000);
+    }
 
-setInterval(()=>{
-if(!pressing||done) return;
+    setInterval(createParticle, 500);
 
-value+=2;
-fill.style.clipPath=`inset(${100-value}% 0 0 0)`;
+    function start(e) {
+        if(done) return;
+        if(e.cancelable) e.preventDefault();
+        pressing = true;
+        particleInterval = setInterval(createParticle, 100);
+    }
 
-if(value>=100){
-done=true;
-show();
-}
+    function stop() {
+        pressing = false;
+        clearInterval(particleInterval);
+    }
 
-},30);
+    setInterval(() => {
+        if (!pressing || done) return;
 
-function show(){
-photo.classList.add("show");
-hint.classList.add("hide");
+        value += 1.5; 
+        if (value > 100) value = 100;
+        
+        // เติมจากล่างขึ้นบน
+        fill.style.clipPath = `inset(${100 - value}% 0 0 0)`;
 
-setTimeout(()=>{
-letter.classList.add("show");
-},1200);
-}
+        if (value >= 100) {
+            done = true;
+            pressing = false;
+            clearInterval(particleInterval);
+            show();
+        }
+    }, 30);
 
-hold.addEventListener("mousedown",start);
-hold.addEventListener("mouseup",stop);
-hold.addEventListener("mouseleave",stop);
+    function show() {
+        for(let i=0; i<30; i++) {
+            setTimeout(createParticle, i * 50);
+        }
 
-hold.addEventListener("touchstart",start);
-hold.addEventListener("touchend",stop);
+        hint.classList.add("hide");
+        photo.classList.add("show");
+
+        setTimeout(() => {
+            letter.classList.add("show");
+            setTimeout(() => {
+                letter.scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }, 1500);
+    }
+
+    hold.addEventListener("mousedown", start);
+    window.addEventListener("mouseup", stop);
+    
+    hold.addEventListener("touchstart", start, {passive: false});
+    window.addEventListener("touchend", stop);
 </script>
 
 </body>
