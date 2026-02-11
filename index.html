@@ -8,11 +8,11 @@
 
     <style>
         :root {
-            --primary-pink: #ff758f;
-            --deep-pink: #ff4d6d;
+            --primary-pink: #ff4d6d;
+            --deep-pink: #c9184a;
+            --soft-pink: #ffb3c1;
             --soft-cream: #fff9f0;
             --paper-shadow: rgba(0, 0, 0, 0.15);
-            /* พื้นหลังสีหวานขึ้น */
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
@@ -62,28 +62,28 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .heart-wrapper.fade-away {
             opacity: 0;
-            transform: translateY(-120px) scale(0.3);
+            transform: translateY(-100px) scale(0.2);
             pointer-events: none;
         }
 
         .heart-area {
             width: 60vw;
             height: 60vw;
-            max-width: 200px;
-            max-height: 200px;
+            max-width: 220px;
+            max-height: 220px;
             cursor: pointer;
             position: relative;
-            filter: drop-shadow(0 10px 20px rgba(255, 77, 109, 0.4));
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
+            transition: transform 0.2s ease;
         }
 
         .heart-area:active {
-            transform: scale(0.9);
+            transform: scale(0.95);
         }
 
         svg {
@@ -92,16 +92,25 @@
             display: block;
         }
 
+        /* ใช้ Path เดียวกันทั้งหมดเพื่อความสมมาตร */
+        .heart-path {
+            d: path("M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z");
+        }
+
         .outline {
-            fill: rgba(255, 255, 255, 0.2);
+            fill: rgba(255, 255, 255, 0.3);
             stroke: #fff;
-            stroke-width: 6;
+            stroke-width: 10; /* เพิ่มความหนาให้ดูนุ่มนวล */
+            stroke-linejoin: round;
         }
 
         .fill {
-            fill: url(#heartGradient);
+            fill: var(--primary-pink);
+            stroke: #fff; /* ใส่เส้นขอบขาวให้ตัวเติมด้วยเพื่อให้ขอบเท่ากันเสมอ */
+            stroke-width: 10;
+            stroke-linejoin: round;
             clip-path: inset(100% 0 0 0);
-            transition: clip-path 0.15s linear;
+            transition: clip-path 0.1s linear;
         }
 
         .hint {
@@ -109,12 +118,11 @@
             font-size: 1.1rem;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            letter-spacing: 1px;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
+            0%, 100% { opacity: 0.7; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
 
@@ -127,7 +135,7 @@
             align-items: center;
             opacity: 0;
             transform: scale(0.8) rotate(-5deg);
-            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             visibility: hidden;
         }
@@ -139,69 +147,52 @@
             visibility: visible;
         }
 
-        /* กรอบรูปสไตล์โพลารอยด์ */
         .photo-frame {
             width: 100%;
             max-width: 260px;
             background: white;
-            padding: 12px 12px 40px 12px;
+            padding: 12px 12px 45px 12px;
             box-shadow: 0 15px 35px var(--paper-shadow);
             position: relative;
-            transform: rotate(-3deg);
-            transition: transform 0.5s ease;
-        }
-
-        .photo-frame::before {
-            content: "";
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 30px;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(2px);
-            z-index: 5;
+            transform: rotate(-2deg);
+            z-index: 2;
         }
 
         .photo-frame img {
             width: 100%;
             display: block;
             height: auto;
-            border: 1px solid #eee;
+            border: 1px solid #f0f0f0;
         }
 
-        /* จดหมายสไตล์กระดาษเขียนมือ */
         .paper {
-            margin-top: -15px; /* ให้เกยกับรูปเล็กน้อยแบบ Scrapbook */
+            margin-top: -20px;
             background: var(--soft-cream);
-            background-image: 
-                radial-gradient(#d1d1d1 1px, transparent 1px),
-                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
-            background-size: 20px 20px, 100% 30px;
+            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 100% 30px;
             color: #4e342e;
-            padding: 30px 25px;
+            padding: 35px 25px;
             border-radius: 2px;
             font-size: 1.2rem;
             line-height: 1.6;
-            box-shadow: 5px 10px 20px var(--paper-shadow);
+            box-shadow: 5px 10px 25px var(--paper-shadow);
             width: 100%;
             max-width: 320px;
             position: relative;
-            border-left: 5px solid var(--primary-pink);
-            transform: rotate(2deg);
+            border-left: 6px solid var(--primary-pink);
+            transform: rotate(1deg);
+            z-index: 1;
         }
 
-        /* ตกแต่งด้วยดอกไม้และหัวใจจิ๋ว */
         .sticker {
             position: absolute;
-            font-size: 2rem;
-            z-index: 15;
+            font-size: 2.2rem;
+            z-index: 10;
             filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
         }
 
-        .s1 { top: -10px; right: -10px; transform: rotate(15deg); }
-        .s2 { bottom: -10px; left: -10px; transform: rotate(-15deg); }
+        .s1 { top: -15px; right: -10px; transform: rotate(10deg); }
+        .s2 { bottom: -15px; left: -10px; transform: rotate(-15deg); }
 
         .heart-particle {
             position: absolute;
@@ -227,17 +218,13 @@
         <div class="heart-wrapper" id="heartWrapper">
             <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
-                    <defs>
-                        <linearGradient id="heartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ff9a9e;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#fecfef;stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                    <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    <path id="fill" class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <!-- เส้นขอบฐาน -->
+                    <path class="heart-path outline" />
+                    <!-- ตัวเติมสี (ใช้เส้นขอบขนาดเดียวกันเพื่อความเท่ากัน) -->
+                    <path id="fill" class="heart-path fill" />
                 </svg>
             </div>
-            <div class="hint" id="hint">กดค้างบอกรักเค้าหน่อยนะ 🤍</div>
+            <div class="hint" id="hint">กดค้างเติมรักให้เต็มนะ 🤍</div>
         </div>
 
         <!-- Scrapbook Content -->
@@ -254,7 +241,7 @@
                 ขอบคุณที่ทำให้เค้ามีความสุขในทุกวัน<br>
                 เค้าตั้งใจเขียนให้เธอเลยนะ<br><br>
                 <b>รักเธอที่สุดในโลกเลย!</b><br>
-                <span style="font-size: 0.9rem; opacity: 0.7;">- วาเลนไทน์ปีนี้และปีต่อๆ ไป -</span>
+                <span style="font-size: 0.85rem; opacity: 0.6;">- วาเลนไทน์ปีนี้และปีต่อๆ ไป -</span>
             </div>
         </div>
     </div>
@@ -279,14 +266,15 @@
         p.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
         p.style.left = Math.random() * 100 + "vw";
         p.style.top = "105vh";
-        p.style.fontSize = (isBurst ? Math.random() * 25 + 15 : Math.random() * 12 + 10) + "px";
-        const duration = isBurst ? Math.random() * 2 + 2 : Math.random() * 4 + 3;
+        p.style.fontSize = (isBurst ? Math.random() * 20 + 20 : Math.random() * 12 + 10) + "px";
+        const duration = isBurst ? Math.random() * 2 + 1.5 : Math.random() * 4 + 3;
         p.style.animationDuration = duration + "s";
         particlesContainer.appendChild(p);
         setTimeout(() => p.remove(), duration * 1000);
     }
 
-    setInterval(() => { if(!done) createParticle(); }, 800);
+    // พื้นหลังละอองดาว
+    setInterval(() => { if(!done) createParticle(); }, 900);
 
     function start(e) {
         if(done) return;
@@ -300,31 +288,39 @@
         clearInterval(particleInterval);
     }
 
+    // Loop เติมหัวใจ
     setInterval(() => {
         if (!pressing || done) return;
         value += 1.6; 
         if (value > 100) value = 100;
+        
+        // อัปเดตการเติม
         fill.style.clipPath = `inset(${100 - value}% 0 0 0)`;
+        
         if (value >= 100) {
             done = true;
             pressing = false;
             clearInterval(particleInterval);
-            triggerMagic();
+            triggerFinalEffect();
         }
     }, 30);
 
-    function triggerMagic() {
-        for(let i=0; i<40; i++) {
-            setTimeout(() => createParticle(true), i * 30);
+    function triggerFinalEffect() {
+        // เอฟเฟกต์พลุกระจาย
+        for(let i=0; i<45; i++) {
+            setTimeout(() => createParticle(true), i * 25);
         }
 
+        // หัวใจลอยหายไปแบบนุ่มๆ
         heartWrapper.classList.add("fade-away");
 
+        // แสดง Scrapbook
         setTimeout(() => {
             revealContent.classList.add("active");
-        }, 700);
+        }, 600);
     }
 
+    // Events
     hold.addEventListener("mousedown", start);
     window.addEventListener("mouseup", stop);
     hold.addEventListener("touchstart", start, {passive: false});
