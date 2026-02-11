@@ -22,18 +22,16 @@
         body {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
+            height: 100vh;
+            width: 100vw;
             background: #0f0c29;
             background: var(--bg-gradient);
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             font-family: 'Sriracha', cursive, sans-serif;
             color: white;
-            overflow-x: hidden;
-            /* ซ่อน Scrollbar ระหว่างที่กำลังทำ Animation */
-            overflow-y: auto;
-            scroll-behavior: smooth;
+            overflow: hidden; /* ห้ามเลื่อนจอ */
         }
 
         #particles {
@@ -46,34 +44,36 @@
             z-index: 1;
         }
 
-        .main-container {
+        .container {
             position: relative;
             z-index: 10;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 60px 20px;
+            width: 90%;
+            max-width: 400px;
+            height: 100%;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
+        /* --- ส่วนของหัวใจ --- */
         .heart-wrapper {
-            width: 100%;
+            position: absolute;
             display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-            transition: transform 1s ease-in-out;
+            flex-direction: column;
+            align-items: center;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* เมื่อจบงาน ให้หัวใจขยับขึ้นเล็กน้อยเพื่อเปิดพื้นที่ */
-        .heart-wrapper.move-up {
-            transform: translateY(-20px) scale(0.9);
+        /* เอฟเฟกต์หัวใจลอยหายไป */
+        .heart-wrapper.fade-away {
+            opacity: 0;
+            transform: translateY(-100px) scale(0.5);
+            pointer-events: none;
         }
 
         .heart-area {
-            width: 50vw;
-            height: 50vw;
+            width: 60vw;
+            height: 60vw;
             max-width: 200px;
             max-height: 200px;
             cursor: pointer;
@@ -106,47 +106,50 @@
             transition: clip-path 0.15s linear;
         }
 
-        .heart-glow {
-            fill: white;
-            opacity: 0.15;
-            pointer-events: none;
+        .hint {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: var(--soft-pink);
+            letter-spacing: 1px;
+            text-align: center;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
         }
 
-        /* --- Reveal Section --- */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        /* --- ส่วนเนื้อหาที่จะมาแทนที่ --- */
         .reveal-content {
+            position: absolute;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* เตรียมความพร้อมสำหรับการสไลด์ */
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: scale(0.8) translateY(20px);
+            transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             visibility: hidden;
         }
 
         .reveal-content.active {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1) translateY(0);
             pointer-events: auto;
             visibility: visible;
         }
 
         .photo-frame {
             width: 100%;
-            max-width: 320px;
-            margin-bottom: 30px;
-            border-radius: 25px;
-            border: 8px solid white;
-            box-shadow: 0 15px 45px rgba(0,0,0,0.5);
+            max-width: 280px;
+            margin-bottom: 20px;
+            border-radius: 20px;
+            border: 6px solid white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
-            transform: rotate(-2deg);
-            transition: transform 1s ease-out;
-        }
-
-        .reveal-content.active .photo-frame {
-            transform: rotate(0deg);
         }
 
         .photo-frame img {
@@ -157,59 +160,16 @@
 
         .paper {
             background: #fff;
-            background-image: linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
-            background-size: 100% 35px;
+            background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 100% 30px;
             color: #333;
-            padding: 40px 30px;
-            border-radius: 20px;
-            font-size: 1.15rem;
-            line-height: 1.6;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            position: relative;
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             width: 100%;
-            word-wrap: break-word;
-            /* เพิ่มลูกเล่นจดหมายค่อยๆ ปรากฏตามหลังรูป */
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1s ease-out 0.8s;
-        }
-
-        .reveal-content.active .paper {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .paper::after {
-            content: "♥";
-            position: absolute;
-            bottom: 15px;
-            right: 20px;
-            color: var(--primary-pink);
-            font-size: 1.3rem;
-            opacity: 0.4;
-        }
-
-        .hint {
-            margin-top: 15px;
-            font-size: 0.95rem;
-            color: var(--soft-pink);
-            letter-spacing: 1px;
             text-align: center;
-            transition: opacity 0.5s ease;
-        }
-
-        .pulse {
-            animation: pulseAnim 2s infinite;
-        }
-
-        @keyframes pulseAnim {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .hide { 
-            opacity: 0 !important;
-            pointer-events: none;
         }
 
         .heart-particle {
@@ -225,18 +185,14 @@
             90% { opacity: 0.8; }
             100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
-        
-        .footer-space {
-            height: 100px;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
 
     <div id="particles"></div>
 
-    <div class="main-container">
+    <div class="container">
+        <!-- หัวใจที่หายไป -->
         <div class="heart-wrapper" id="heartWrapper">
             <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
@@ -248,27 +204,23 @@
                     </defs>
                     <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                     <path id="fill" class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    <path class="heart-glow" d="M65,35 C55,35 35,45 35,70 C35,85 50,105 50,105 L55,100 C55,100 45,85 45,70 C45,55 55,45 65,45 Z" />
                 </svg>
             </div>
+            <div class="hint" id="hint">กดค้างที่หัวใจเบาๆ นะ 🤍</div>
         </div>
 
-        <div class="hint pulse" id="hint">กดค้างที่หัวใจเบาๆ นะ 🤍</div>
-
+        <!-- เนื้อหาที่มาแทนที่ -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="mf.jpg" alt="Valentine Photo" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="mf.jpg" alt="[Image of Valentine Photo]" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
 
             <div class="paper">
-                บี๋คั้บ 🤍<br><br>
-                ขอบคุณที่กดหัวใจจนเต็มนะ<br>
-                เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
-                สุขสันต์วันวาเลนไทน์นะคั้บ<br>
-                เค้ารักเธอมากที่สุดเลย!
+                บี๋คั้บ 🤍<br>
+                ขอบคุณที่เติมเต็มชีวิตเค้านะ<br>
+                สุขสันต์วันวาเลนไทน์คั้บ<br>
+                รักเธอที่สุดเลย!
             </div>
-            
-            <div class="footer-space"></div>
         </div>
     </div>
 
@@ -277,7 +229,6 @@
     const fill = document.getElementById("fill");
     const heartWrapper = document.getElementById("heartWrapper");
     const revealContent = document.getElementById("revealContent");
-    const hint = document.getElementById("hint");
     const particlesContainer = document.getElementById("particles");
 
     let pressing = false;
@@ -294,15 +245,12 @@
         p.style.left = Math.random() * 100 + "vw";
         p.style.top = "105vh";
         p.style.fontSize = (isBurst ? Math.random() * 25 + 15 : Math.random() * 12 + 10) + "px";
-        
         const duration = isBurst ? Math.random() * 2 + 2 : Math.random() * 4 + 3;
         p.style.animationDuration = duration + "s";
-        
         particlesContainer.appendChild(p);
         setTimeout(() => p.remove(), duration * 1000);
     }
 
-    // ละอองลอยเบาๆ เป็นพื้นหลัง
     setInterval(() => { if(!done) createParticle(); }, 800);
 
     function start(e) {
@@ -317,58 +265,38 @@
         clearInterval(particleInterval);
     }
 
-    // ระบบเติมหัวใจ
     setInterval(() => {
         if (!pressing || done) return;
-
-        value += 1.4; 
+        value += 1.5; 
         if (value > 100) value = 100;
-        
         fill.style.clipPath = `inset(${100 - value}% 0 0 0)`;
-
         if (value >= 100) {
             done = true;
             pressing = false;
             clearInterval(particleInterval);
-            triggerMagicReveal();
+            triggerSwap();
         }
     }, 30);
 
-    function triggerMagicReveal() {
-        // 1. ซ่อนคำใบ้
-        hint.classList.add("hide");
-        
-        // 2. เอฟเฟกต์พลุหัวใจกระจาย
+    function triggerSwap() {
+        // 1. กระจายหัวใจ
         for(let i=0; i<40; i++) {
             setTimeout(() => createParticle(true), i * 30);
         }
 
-        // 3. เริ่ม Animation การสไลด์ขึ้นอย่างนุ่มนวล
+        // 2. หัวใจลอยหายไป
+        heartWrapper.classList.add("fade-away");
+
+        // 3. แสดงเนื้อหาขึ้นมาแทนที่ในตำแหน่งเดิม
         setTimeout(() => {
-            // ขยับหัวใจขึ้นเล็กน้อย
-            heartWrapper.classList.add("move-up");
-            
-            // แสดงเนื้อหา (รูปภาพและจดหมาย)
             revealContent.classList.add("active");
-            
-            // 4. เลื่อนหน้าจอลงอัตโนมัติเพื่อให้เห็นจดหมาย
-            setTimeout(() => {
-                const scrollTarget = revealContent.offsetTop - 40;
-                window.scrollTo({
-                    top: scrollTarget,
-                    behavior: 'smooth'
-                });
-            }, 1000); // รอให้รูปภาพโผล่ขึ้นมาก่อนค่อยเริ่มเลื่อน
-            
-        }, 500);
+        }, 600);
     }
 
-    // Event Listeners
     hold.addEventListener("mousedown", start);
     window.addEventListener("mouseup", stop);
     hold.addEventListener("touchstart", start, {passive: false});
     window.addEventListener("touchend", stop);
-    hold.addEventListener("mouseleave", () => { if(pressing) stop(); });
 </script>
 
 </body>
