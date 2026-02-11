@@ -1,1 +1,185 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 🤍</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Prompt', sans-serif;
+        background: #0f0f14;
+        color: white;
+        overflow-x: hidden;
+        text-align: center;
+    }
+
+    section {
+        padding: 80px 20px;
+    }
+
+    h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        opacity: 0.8;
+    }
+
+    /* รูป */
+    .main-photo {
+        width: 260px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .main-photo:hover {
+        transform: scale(1.05);
+    }
+
+    /* popup */
+    .popup-bg {
+        position: fixed;
+        inset: 0;
+        backdrop-filter: blur(8px);
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.4s;
+    }
+
+    .popup-bg.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .popup {
+        background: #1c1c25;
+        padding: 30px 40px;
+        border-radius: 20px;
+        font-size: 22px;
+        transform: scale(0.8);
+        transition: 0.4s;
+    }
+
+    .popup-bg.show .popup {
+        transform: scale(1);
+    }
+
+    /* snow */
+    .snow {
+        position: fixed;
+        top: -10px;
+        pointer-events: none;
+        animation: fall linear forwards;
+        opacity: 0.8;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(110vh);
+        }
+    }
+
+    footer {
+        opacity: 0.5;
+        font-size: 12px;
+        padding: 40px;
+    }
+</style>
+</head>
+<body>
+
+<audio id="bgm" loop>
+    <source src="ruk-rak-pop.mp3" type="audio/mpeg">
+</audio>
+
+<section>
+    <h1>Happy Valentine's 🤍</h1>
+    <p>กดรูปนี้สิ</p>
+
+    <img src="cat.jpg" class="main-photo" id="photo">
+</section>
+
+<section>
+    <h2>บี๋คั้บบบ</h2>
+    <p>
+        เธอพาเค้าดูซีรีย์เกาหลีมาหลายเรื่องเลย  
+        แต่เรื่องยิ้มไว้ในวันที่ส้มไม่หวาน  
+        มันคล้ายคู่เราจริง ๆ เนอะ
+    </p>
+</section>
+
+<footer>
+    made with 🤍
+</footer>
+
+<!-- popup -->
+<div class="popup-bg" id="popup">
+    <div class="popup" id="popupText">
+        ฮั่นแน่ เข้ามาอ่านอีกแย้วว
+    </div>
+</div>
+
+<script>
+/* ===== เพลงเริ่มที่นาทีที่กำหนด ===== */
+document.addEventListener("click", () => {
+    const bgm = document.getElementById("bgm");
+
+    bgm.currentTime = 80; // เริ่มที่นาที 1:20
+    bgm.play().catch(()=>{});
+}, { once:true });
+
+
+/* ===== popup ตอนกดรูป ===== */
+const photo = document.getElementById("photo");
+const popup = document.getElementById("popup");
+
+photo.addEventListener("click", () => {
+    popup.classList.add("show");
+
+    setTimeout(()=>{
+        popup.classList.remove("show");
+    }, 4000);
+
+    /* popup ขอบคุณหลัง 5 วิ */
+    setTimeout(()=>{
+        document.getElementById("popupText").innerHTML =
+        "ขอบคุณที่เดินมาถึงตรงนี้นะ 🤍";
+        popup.classList.add("show");
+
+        setTimeout(()=>{
+            popup.classList.remove("show");
+        }, 4000);
+
+    }, 5000);
+});
+
+
+/* ===== หิมะเบา ๆ ===== */
+function createSnow() {
+    const snow = document.createElement("div");
+    snow.classList.add("snow");
+    snow.innerHTML = "❄️";
+
+    snow.style.left = Math.random() * 100 + "vw";
+    snow.style.fontSize = (Math.random()*10+10)+"px";
+    snow.style.animationDuration = (Math.random()*3+5)+"s";
+
+    document.body.appendChild(snow);
+
+    setTimeout(()=> snow.remove(), 8000);
+}
+
+setInterval(createSnow, 400);
+</script>
+
+</body>
+</html>
 
