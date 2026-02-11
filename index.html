@@ -10,8 +10,10 @@
         :root {
             --primary-pink: #ff758f;
             --deep-pink: #ff4d6d;
-            --light-pink: #fff0f3;
-            --bg-gradient: linear-gradient(135deg, #2c0735 0%, #0f0c29 100%);
+            --soft-cream: #fff9f0;
+            --paper-shadow: rgba(0, 0, 0, 0.15);
+            /* พื้นหลังสีหวานขึ้น */
+            --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
         * {
@@ -24,14 +26,13 @@
             padding: 0;
             height: 100vh;
             width: 100vw;
-            background: #0f0c29;
             background: var(--bg-gradient);
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Sriracha', cursive, sans-serif;
-            color: white;
-            overflow: hidden; /* ห้ามเลื่อนจอ */
+            color: #5d4037;
+            overflow: hidden;
         }
 
         #particles {
@@ -55,7 +56,7 @@
             align-items: center;
         }
 
-        /* --- ส่วนของหัวใจ --- */
+        /* --- Heart Section --- */
         .heart-wrapper {
             position: absolute;
             display: flex;
@@ -64,10 +65,9 @@
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* เอฟเฟกต์หัวใจลอยหายไป */
         .heart-wrapper.fade-away {
             opacity: 0;
-            transform: translateY(-100px) scale(0.5);
+            transform: translateY(-120px) scale(0.3);
             pointer-events: none;
         }
 
@@ -78,12 +78,12 @@
             max-height: 200px;
             cursor: pointer;
             position: relative;
-            filter: drop-shadow(0 0 25px rgba(255, 117, 143, 0.4));
+            filter: drop-shadow(0 10px 20px rgba(255, 77, 109, 0.4));
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .heart-area:active {
-            transform: scale(0.92);
+            transform: scale(0.9);
         }
 
         svg {
@@ -93,11 +93,9 @@
         }
 
         .outline {
-            fill: rgba(255, 255, 255, 0.03);
-            stroke: rgba(255, 255, 255, 0.5);
-            stroke-width: 8;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+            fill: rgba(255, 255, 255, 0.2);
+            stroke: #fff;
+            stroke-width: 6;
         }
 
         .fill {
@@ -107,21 +105,20 @@
         }
 
         .hint {
-            margin-top: 20px;
-            font-size: 1rem;
-            color: var(--soft-pink);
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
             letter-spacing: 1px;
-            text-align: center;
-            opacity: 0.8;
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- ส่วนเนื้อหาที่จะมาแทนที่ --- */
+        /* --- Reveal Section (Scrapbook Style) --- */
         .reveal-content {
             position: absolute;
             width: 100%;
@@ -129,7 +126,7 @@
             flex-direction: column;
             align-items: center;
             opacity: 0;
-            transform: scale(0.8) translateY(20px);
+            transform: scale(0.8) rotate(-5deg);
             transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             pointer-events: none;
             visibility: hidden;
@@ -137,40 +134,74 @@
 
         .reveal-content.active {
             opacity: 1;
-            transform: scale(1) translateY(0);
+            transform: scale(1) rotate(0deg);
             pointer-events: auto;
             visibility: visible;
         }
 
+        /* กรอบรูปสไตล์โพลารอยด์ */
         .photo-frame {
             width: 100%;
-            max-width: 280px;
-            margin-bottom: 20px;
-            border-radius: 20px;
-            border: 6px solid white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            overflow: hidden;
+            max-width: 260px;
+            background: white;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 15px 35px var(--paper-shadow);
+            position: relative;
+            transform: rotate(-3deg);
+            transition: transform 0.5s ease;
+        }
+
+        .photo-frame::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 5;
         }
 
         .photo-frame img {
             width: 100%;
             display: block;
             height: auto;
+            border: 1px solid #eee;
         }
 
+        /* จดหมายสไตล์กระดาษเขียนมือ */
         .paper {
-            background: #fff;
-            background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
-            background-size: 100% 30px;
-            color: #333;
-            padding: 25px;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-top: -15px; /* ให้เกยกับรูปเล็กน้อยแบบ Scrapbook */
+            background: var(--soft-cream);
+            background-image: 
+                radial-gradient(#d1d1d1 1px, transparent 1px),
+                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 20px 20px, 100% 30px;
+            color: #4e342e;
+            padding: 30px 25px;
+            border-radius: 2px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            box-shadow: 5px 10px 20px var(--paper-shadow);
             width: 100%;
-            text-align: center;
+            max-width: 320px;
+            position: relative;
+            border-left: 5px solid var(--primary-pink);
+            transform: rotate(2deg);
         }
+
+        /* ตกแต่งด้วยดอกไม้และหัวใจจิ๋ว */
+        .sticker {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 15;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
+        }
+
+        .s1 { top: -10px; right: -10px; transform: rotate(15deg); }
+        .s2 { bottom: -10px; left: -10px; transform: rotate(-15deg); }
 
         .heart-particle {
             position: absolute;
@@ -192,34 +223,38 @@
     <div id="particles"></div>
 
     <div class="container">
-        <!-- หัวใจที่หายไป -->
+        <!-- Heart Interaction -->
         <div class="heart-wrapper" id="heartWrapper">
             <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
                     <defs>
                         <linearGradient id="heartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffb3c1;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#ff4d6d;stop-opacity:1" />
+                            <stop offset="0%" style="stop-color:#ff9a9e;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#fecfef;stop-opacity:1" />
                         </linearGradient>
                     </defs>
                     <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                     <path id="fill" class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
-            <div class="hint" id="hint">กดค้างที่หัวใจเบาๆ นะ 🤍</div>
+            <div class="hint" id="hint">กดค้างบอกรักเค้าหน่อยนะ 🤍</div>
         </div>
 
-        <!-- เนื้อหาที่มาแทนที่ -->
+        <!-- Scrapbook Content -->
         <div class="reveal-content" id="revealContent">
+            <div class="sticker s1">🌸</div>
             <div class="photo-frame">
                 <img src="mf.jpg" alt="[Image of Valentine Photo]" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
 
             <div class="paper">
-                บี๋คั้บ 🤍<br>
-                ขอบคุณที่เติมเต็มชีวิตเค้านะ<br>
-                สุขสันต์วันวาเลนไทน์คั้บ<br>
-                รักเธอที่สุดเลย!
+                <div class="sticker s2">🎀</div>
+                บี๋คั้บ.. 🤍<br>
+                ขอบคุณนะที่คอยอยู่ข้างกัน<br>
+                ขอบคุณที่ทำให้เค้ามีความสุขในทุกวัน<br>
+                เค้าตั้งใจเขียนให้เธอเลยนะ<br><br>
+                <b>รักเธอที่สุดในโลกเลย!</b><br>
+                <span style="font-size: 0.9rem; opacity: 0.7;">- วาเลนไทน์ปีนี้และปีต่อๆ ไป -</span>
             </div>
         </div>
     </div>
@@ -236,7 +271,7 @@
     let done = false;
     let particleInterval;
 
-    const emojis = ["❤", "💖", "🌸", "✨", "🤍", "🌷"];
+    const emojis = ["❤", "💖", "🌸", "✨", "🤍", "🌷", "🍭"];
 
     function createParticle(isBurst = false) {
         const p = document.createElement("div");
@@ -267,30 +302,27 @@
 
     setInterval(() => {
         if (!pressing || done) return;
-        value += 1.5; 
+        value += 1.6; 
         if (value > 100) value = 100;
         fill.style.clipPath = `inset(${100 - value}% 0 0 0)`;
         if (value >= 100) {
             done = true;
             pressing = false;
             clearInterval(particleInterval);
-            triggerSwap();
+            triggerMagic();
         }
     }, 30);
 
-    function triggerSwap() {
-        // 1. กระจายหัวใจ
+    function triggerMagic() {
         for(let i=0; i<40; i++) {
             setTimeout(() => createParticle(true), i * 30);
         }
 
-        // 2. หัวใจลอยหายไป
         heartWrapper.classList.add("fade-away");
 
-        // 3. แสดงเนื้อหาขึ้นมาแทนที่ในตำแหน่งเดิม
         setTimeout(() => {
             revealContent.classList.add("active");
-        }, 600);
+        }, 700);
     }
 
     hold.addEventListener("mousedown", start);
