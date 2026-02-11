@@ -1,226 +1,186 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-  <meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sriracha&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hold my heart 🤍</title>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hold my heart 🤍</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: #0f0f14;
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: white;
-      overflow: hidden;
-    }
+<style>
+body{
+  margin:0;
+  background:#0f0f14;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  overflow:hidden;
+  color:white;
+  font-family:sans-serif;
+}
 
-    /* container */
-    .wrap {
-      text-align: center;
-    }
+.wrap{text-align:center;}
 
-    /* heart svg */
-    .heart-box {
-      width: 200px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+.heart-box{
+  width:200px;
+  height:200px;
+  margin:auto;
+  position:relative;
+  cursor:pointer;
+}
 
-    svg {
-      width: 100%;
-      height: 100%;
-      transform: scale(0.92);
-    }
+svg{width:100%;height:100%;}
 
-    /* outline */
-    .heart-outline {
-      fill: none;
-      stroke: white;
-      stroke-width: 6;
-      opacity: 0.5;
-    }
+.heart-outline{
+  fill:none;
+  stroke:white;
+  stroke-width:6;
+  opacity:.5;
+}
 
-    /* fill */
-    .heart-fill {
-      fill: #ff4d6d;
-      clip-path: inset(100% 0 0 0);
-      transition: clip-path 0.1s linear;
-    }
+.heart-fill{
+  fill:#ff4d6d;
+  clip-path:inset(100% 0 0 0);
+  transition:clip-path .1s linear;
+}
 
-    /* hidden photo */
-    .photo {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: 1s;
-    }
+/* PHOTO */
+.photo{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  opacity:0;
+  transform:scale(.8);
+  transition:1s;
+}
 
-    .photo.show {
-      opacity: 1;
-      transform: scale(1);
-    }
+.photo.show{
+  opacity:1;
+  transform:scale(1);
+}
 
-    .photo img {
-      width: 260px;
-      border-radius: 20px;
-    }
+.photo img{
+  width:260px;
+  border-radius:20px;
+}
 
-    .hint {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #888;
-      transition: 0.5s;
-    }
+/* LETTER BELOW */
+#letterWrap{
+  max-height:0;
+  overflow:hidden;
+  transition:1s;
+}
 
-    .hint.hide {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+#letterWrap.show{
+  max-height:400px;
+  margin-top:20px;
+}
 
-    #letterWrap {
-      max-height: 0;
-      overflow: hidden;
-      transition: 1s;
-    }
+.letter{
+  background:#fffaf4;
+  padding:25px;
+  border-radius:14px;
+  font-family:"Sriracha",cursive;
+  color:#5a3e2b;
+  opacity:0;
+  transform:translateY(30px);
+  transition:.8s;
+}
 
-    #letterWrap.show {
-      max-height: 400px;
-      margin-top: 25px;
-    }
+#letterWrap.show .letter{
+  opacity:1;
+  transform:translateY(0);
+}
 
-    .letter {
-      background: #fffaf4;
-      padding: 25px;
-      border-radius: 14px;
-      font-family: "Sriracha", cursive;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      transform: translateY(40px);
-      opacity: 0;
-      transition: 0.8s;
-    }
-
-    #letterWrap.show .letter {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* paper */
-    .paper {
-      width: 320px;
-      background: #fffaf4;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-      font-family: "Sriracha", cursive;
-      color: #5a3e2b;
-      line-height: 1.7;
-      font-size: 18px;
-    }
-  </style>
+.hint{
+  margin-top:20px;
+  color:#aaa;
+  transition:.5s;
+}
+.hint.hide{opacity:0;}
+</style>
 </head>
 
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="heart-box" id="holdArea">
+<div class="heart-box" id="holdArea">
 
-      <svg viewBox="0 0 512 512">
-
-        <path class="heart-outline" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
+<svg viewBox="0 0 512 512">
+<path class="heart-outline" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
 24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z" />
+0 144-192 256-192 256z"/>
 
-        <path id="heartFill" class="heart-fill" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
+<path id="heartFill" class="heart-fill" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
 24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z" />
+0 144-192 256-192 256z"/>
+</svg>
 
-      </svg>
+<div class="photo" id="photo">
+<img src="mf.jpg">
+<div id="letterWrap">
+<div class="letter">
+บี๋คั้บ 🤍<br><br>
+ขอบคุณที่กดหัวใจจนเต็มนะ<br>
+เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
+เค้ารักเธอมากนะ
+</div>
+</div>
+</div>
 
-      <!-- รูป -->
-      <div class="photo" id="photo">
-        <img src="mf.jpg">
-        <div id="letterWrap">
-          <div class="letter">
-            บี๋คั้บ 🤍<br><br>
-            ขอบคุณที่กดหัวใจจนเต็มนะ<br>
-            เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
-            เค้ารักเธอมากนะ
-          </div>
-        </div>
-      </div>
+</div>
 
-    </div>
+<div class="hint">บี๋ลองกดค้างไว้นะะะ 🤍</div>
 
-    <div class="hint">บี๋ลองกดค้างไว้นะะะ 🤍</div>
-  </div>
+</div>
 
-  <script>
-    let holdTime = 0;
-    let holding = false;
-    const fill = document.getElementById("heartFill");
-    const photo = document.getElementById("photo");
+<script>
+let holdTime=0;
+let holding=false;
+let revealed=false;
 
-    function startHold() {
-      holding = true;
-    }
+const fill=document.getElementById("heartFill");
+const photo=document.getElementById("photo");
+const holdArea=document.getElementById("holdArea");
 
-    function stopHold() {
-      holding = false;
-    }
+function startHold(){holding=true;}
+function stopHold(){holding=false;}
 
-    setInterval(() => {
-      if (!holding) return;
+setInterval(()=>{
+if(!holding||revealed) return;
 
-      holdTime += 2;
+holdTime+=2;
 
-      if (holdTime >= 100) {
-        holdTime = 100;
-        reveal();
-      }
+if(holdTime>=100){
+holdTime=100;
+reveal();
+}
 
-      fill.style.clipPath = `inset(${100 - holdTime}% 0 0 0)`;
+fill.style.clipPath=`inset(${100-holdTime}% 0 0 0)`;
 
-    }, 30);
+},30);
 
-    function reveal() {
-      photo.classList.add("show");
+function reveal(){
+if(revealed) return;
+revealed=true;
 
-      // ซ่อน hint
-      document.querySelector(".hint").classList.add("hide");
+photo.classList.add("show");
+document.querySelector(".hint").classList.add("hide");
 
-      // โชว์จดหมายใต้รูป
-      setTimeout(() => {
-        document.getElementById("letterWrap").classList.add("show");
-      }, 1200);
-    }
+setTimeout(()=>{
+document.getElementById("letterWrap").classList.add("show");
+},1200);
+}
 
+holdArea.onmousedown=startHold;
+holdArea.onmouseup=stopHold;
+holdArea.onmouseleave=stopHold;
 
-    /* mouse */
-    holdArea.onmousedown = startHold;
-    holdArea.onmouseup = stopHold;
-    holdArea.onmouseleave = stopHold;
-
-    /* mobile */
-    holdArea.ontouchstart = startHold;
-    holdArea.ontouchend = stopHold;
-  </script>
+holdArea.ontouchstart=startHold;
+holdArea.ontouchend=stopHold;
+</script>
 
 </body>
-
 </html>
