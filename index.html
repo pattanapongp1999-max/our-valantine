@@ -1,189 +1,180 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
-  <meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hold my heart 🤍</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+<title>For you 🤍</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: #0f0f14;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      color: white;
-    }
+<style>
+body{
+  margin:0;
+  height:100vh;
+  background:#0e0e13;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:sans-serif;
+  color:white;
+  overflow:hidden;
+}
 
-    .wrap {
-      text-align: center;
-    }
+.wrap{text-align:center}
 
-    .heart-box {
-      width: 200px;
-      height: 200px;
-      margin: auto;
-      position: relative;
-      cursor: pointer;
-    }
+/* HEART */
+.heart-area{
+  width:220px;
+  height:220px;
+  margin:auto;
+  cursor:pointer;
+  position:relative;
+}
 
-    svg {
-      width: 100%;
-      height: 100%;
-    }
+svg{width:100%;height:100%}
 
-    .heart-outline {
-      fill: none;
-      stroke: white;
-      stroke-width: 6;
-      opacity: .5;
-    }
+.outline{
+  fill:none;
+  stroke:white;
+  stroke-width:6;
+  opacity:.5;
+}
 
-    .heart-fill {
-      fill: #ff4d6d;
-      clip-path: inset(100% 0 0 0);
-    }
+.fill{
+  fill:#ff4d6d;
+  clip-path:inset(100% 0 0 0);
+}
 
-    /* photo */
-    .photo {
-      opacity: 0;
-      transform: scale(.7);
-      transition: 1s;
-    }
+/* PHOTO */
+.photo{
+  opacity:0;
+  transform:scale(.7);
+  transition:1s;
+  margin-top:20px;
+}
 
-    .photo.show {
-      opacity: 1;
-      transform: scale(1);
-    }
+.photo.show{
+  opacity:1;
+  transform:scale(1);
+}
 
-    .photo img {
-      width: 260px;
-      border-radius: 20px;
-      margin-top: 20px;
-    }
+.photo img{
+  width:260px;
+  border-radius:18px;
+}
 
-    /* letter */
-    #letterWrap {
-      max-height: 0;
-      overflow: hidden;
-      transition: 1s;
-    }
+/* LETTER */
+#letter{
+  max-height:0;
+  overflow:hidden;
+  transition:1s;
+}
 
-    #letterWrap.show {
-      max-height: 500px;
-      margin-top: 20px;
-    }
+#letter.show{
+  max-height:400px;
+  margin-top:20px;
+}
 
-    .letter {
-      background: #fffaf4;
-      padding: 25px;
-      border-radius: 14px;
-      font-family: "Sriracha", cursive;
-      color: #5a3e2b;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: .8s;
-    }
+.paper{
+  background:#fffaf4;
+  color:#5a3e2b;
+  padding:25px;
+  border-radius:14px;
+  font-family:"Sriracha",cursive;
+  opacity:0;
+  transform:translateY(30px);
+  transition:.8s;
+}
 
-    #letterWrap.show .letter {
-      opacity: 1;
-      transform: translateY(0);
-    }
+#letter.show .paper{
+  opacity:1;
+  transform:translateY(0);
+}
 
-    .hint {
-      margin-top: 20px;
-      color: #aaa;
-      transition: .4s;
-    }
-
-    .hint.hide {
-      opacity: 0;
-    }
-  </style>
+.hint{
+  margin-top:20px;
+  color:#aaa;
+  transition:.4s;
+}
+.hint.hide{opacity:0}
+</style>
 </head>
 
 <body>
 
-  <div class="wrap">
+<div class="wrap">
 
-    <div class="heart-box" id="holdArea">
-
-      <svg viewBox="0 0 512 512">
-        <path class="heart-outline" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
+<div class="heart-area" id="hold">
+<svg viewBox="0 0 512 512">
+<path class="outline" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
 24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z" />
+0 144-192 256-192 256z"/>
 
-        <path id="heartFill" class="heart-fill" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
+<path id="fill" class="fill" d="M256 464s-192-112-192-256c0-88 72-160 160-160 48 0 88 24 112 56
 24-32 64-56 112-56 88 0 160 72 160 160
-0 144-192 256-192 256z" />
-      </svg>
+0 144-192 256-192 256z"/>
+</svg>
+</div>
 
-    </div>
+<div class="photo" id="photo">
+<img src="mf.jpg">
+</div>
 
-    <div class="photo" id="photo">
-      <img src="mf.jpg">
-      <div id="letterWrap">
-        <div class="letter">
-          บี๋คั้บ 🤍<br><br>
-          ขอบคุณที่กดหัวใจจนเต็มนะ<br>
-          เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
-          เค้ารักเธอมากนะ
-        </div>
-      </div>
-    </div>
+<div id="letter">
+<div class="paper">
+บี๋คั้บ 🤍<br><br>
+ขอบคุณที่กดหัวใจจนเต็มนะ<br>
+เหมือนที่เธอเติมเต็มชีวิตเค้าเลย<br><br>
+เค้ารักเธอมากนะ
+</div>
+</div>
 
-    <div class="hint">บี๋ลองกดค้างไว้นะะะ 🤍</div>
+<div class="hint" id="hint">กดค้างที่หัวใจ 🤍</div>
 
-  </div>
+</div>
 
-  <script>
-    const holdArea = document.getElementById("holdArea");
-    const fill = document.getElementById("heartFill");
-    const photo = document.getElementById("photo");
-    const hint = document.querySelector(".hint");
+<script>
+const hold=document.getElementById("hold");
+const fill=document.getElementById("fill");
+const photo=document.getElementById("photo");
+const letter=document.getElementById("letter");
+const hint=document.getElementById("hint");
 
-    let holding = false;
-    let progress = 0;
-    let done = false;
+let pressing=false;
+let value=0;
+let done=false;
 
-    function start() { holding = true; }
-    function stop() { holding = false; }
+function start(){pressing=true;}
+function stop(){pressing=false;}
 
-    setInterval(() => {
-      if (!holding || done) return;
+setInterval(()=>{
+if(!pressing||done) return;
 
-      progress += 2;
+value+=2;
+fill.style.clipPath=`inset(${100-value}% 0 0 0)`;
 
-      fill.style.clipPath = `inset(${100 - progress}% 0 0 0)`;
+if(value>=100){
+done=true;
+show();
+}
 
-      if (progress >= 100) {
-        done = true;
-        reveal();
-      }
+},30);
 
-    }, 30);
+function show(){
+photo.classList.add("show");
+hint.classList.add("hide");
 
-    function reveal() {
-      photo.classList.add("show");
-      hint.classList.add("hide");
+setTimeout(()=>{
+letter.classList.add("show");
+},1200);
+}
 
-      setTimeout(() => {
-        document.getElementById("letterWrap").classList.add("show");
-      }, 1200);
-    }
+hold.addEventListener("mousedown",start);
+hold.addEventListener("mouseup",stop);
+hold.addEventListener("mouseleave",stop);
 
-    holdArea.addEventListener("mousedown", start);
-    holdArea.addEventListener("mouseup", stop);
-    holdArea.addEventListener("mouseleave", stop);
-
-    holdArea.addEventListener("touchstart", start);
-    holdArea.addEventListener("touchend", stop);
-  </script>
+hold.addEventListener("touchstart",start);
+hold.addEventListener("touchend",stop);
+</script>
 
 </body>
-
 </html>
