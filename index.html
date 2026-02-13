@@ -77,7 +77,7 @@
             max-height: 240px;
             position: relative;
             cursor: pointer;
-            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
+            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.4));
         }
 
         svg {
@@ -87,22 +87,21 @@
             overflow: visible;
         }
 
-        /* หัวใจดวงหลัง (สีขาวจาง) */
-        .outline-bg {
+        .heart-path {
+            d: path("M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z");
+        }
+
+        .outline {
             fill: rgba(255, 255, 255, 0.4);
             stroke: #fff;
             stroke-width: 10;
-            stroke-linejoin: round;
         }
 
-        /* หัวใจดวงหน้า (สีชมพู) */
-        .fill-heart {
+        .fill-layer {
             fill: var(--primary-pink);
             stroke: #fff;
             stroke-width: 10;
-            stroke-linejoin: round;
-            /* ใช้ ClipPath ตัดแบบสี่เหลี่ยมตามเดิม แต่ปรับโครงสร้างให้เนียนขึ้น */
-            clip-path: url(#safeHeartClip);
+            mask: url(#heartMask);
         }
 
         .hint {
@@ -211,7 +210,7 @@
 
         .food-title {
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
             text-align: center;
@@ -274,24 +273,21 @@
     <div class="container">
         <!-- Section 1: Heart Press -->
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold" onpointerdown="startPress(event)" onpointerup="stopPress(event)"
-                onpointerleave="stopPress(event)" onpointercancel="stopPress(event)">
+            <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
                     <defs>
-                        <!-- เปลี่ยนชื่อเพื่อความชัวร์และใช้สัดส่วนที่ครอบคลุม Stroke -->
-                        <clipPath id="safeHeartClip">
-                            <rect id="clipRect" x="-20" y="200" width="240" height="240" />
-                        </clipPath>
+                        <!-- ใช้ Mask แทน ClipPath เพื่อแก้ปัญหาเส้นขาวขยับตามบนมือถือ -->
+                        <mask id="heartMask">
+                            <rect x="0" y="0" width="200" height="200" fill="black" />
+                            <rect id="maskRect" x="0" y="200" width="200" height="200" fill="white" />
+                        </mask>
                     </defs>
                     
-                    <!-- วาดฐานหัวใจ -->
-                    <path class="outline-bg"
-                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <!-- ฐานสีขาวจาง -->
+                    <path class="heart-path outline" />
                     
-                    <!-- วาดหัวใจสีชมพูทับ โดยมี ClipPath ครอบแค่ตัวมันเอง -->
-                    <!-- เพิ่มการขยับ x เล็กน้อยเพื่อให้ครอบเส้น Stroke สีขาวได้มิด -->
-                    <path class="fill-heart"
-                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <!-- สีชมพูที่อยู่ภายใต้ Mask -->
+                    <path class="heart-path fill-layer" />
                 </svg>
             </div>
             <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
@@ -300,8 +296,7 @@
         <!-- Section 2: Letter Reveal -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="max-fah.jpg"
-                    onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
             <div class="paper">
                 บี๋คั้บ.. 🤍<br>
@@ -336,50 +331,62 @@
     </div>
 
     <script>
-        const clipRect = document.getElementById("clipRect");
+        const maskRect = document.getElementById("maskRect");
         const heartWrapper = document.getElementById("heartWrapper");
         const revealContent = document.getElementById("revealContent");
         const foodSection = document.getElementById("foodSection");
         const particlesContainer = document.getElementById("particles");
-        const hold = document.getElementById("hold");
+        const holdArea = document.getElementById("hold");
 
-        let value = 0;
+        let progress = 0;
         let isPressing = false;
         let isDone = false;
 
-        function startPress(e) {
+        // จัดการเรื่อง Touch ให้แม่นยำขึ้น
+        holdArea.addEventListener('pointerdown', (e) => {
             if (isDone) return;
-            if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
+            holdArea.setPointerCapture(e.pointerId);
             isPressing = true;
-        }
+        });
 
-        function stopPress(e) {
-            isPressing = false;
-            if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
-        }
+        holdArea.addEventListener('pointerup', () => isPressing = false);
+        holdArea.addEventListener('pointercancel', () => isPressing = false);
+        holdArea.addEventListener('pointerleave', () => isPressing = false);
 
-        function loop() {
+        function updateLoop() {
             if (isPressing && !isDone) {
-                value += 0.8; 
-                if (value >= 100) {
-                    value = 100;
+                progress += 0.85; // ปรับความเร็ว
+                
+                if (progress >= 100) {
+                    progress = 100;
                     isDone = true;
-                    finish();
+                    onFinish();
                 }
-                // แก้ไขสูตรการคำนวณ y ให้กว้างขึ้นเพื่อไม่ให้เหลือขอบสี่เหลี่ยม
-                clipRect.setAttribute("y", 200 - (value * 1.85));
+                
+                // เลื่อนหน้ากากสีขาวขึ้นไป (Masking)
+                // y = 200 (ล่างสุด) -> y = 20 (บนสุดเพื่อให้ครอบคลุม stroke)
+                const yPos = 200 - (progress * 1.8);
+                maskRect.setAttribute("y", yPos);
+                
                 if (Math.random() > 0.8) createParticle(true);
             }
-            requestAnimationFrame(loop);
+            requestAnimationFrame(updateLoop);
         }
-        loop();
+        updateLoop();
 
-        function finish() {
-            for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
-            heartWrapper.classList.add("hidden");
+        function onFinish() {
+            // เอฟเฟกต์ตอนจบ
+            for (let i = 0; i < 35; i++) {
+                setTimeout(() => createParticle(true), i * 30);
+            }
+            
             setTimeout(() => {
-                revealContent.classList.add("active");
-            }, 700);
+                heartWrapper.classList.add("hidden");
+                setTimeout(() => {
+                    heartWrapper.style.display = "none";
+                    revealContent.classList.add("active");
+                }, 600);
+            }, 300);
         }
 
         function goToFood() {
@@ -403,7 +410,7 @@
         function createParticle(burst) {
             const p = document.createElement("div");
             p.className = "heart-particle";
-            p.innerHTML = ["❤", "💖", "🤍", "🌸"][Math.floor(Math.random() * 4)];
+            p.innerHTML = ["❤", "💖", "🤍", "🌸", "✨"][Math.floor(Math.random() * 5)];
             p.style.left = Math.random() * 100 + "vw";
             p.style.top = "105vh";
 
@@ -420,18 +427,17 @@
         setInterval(() => {
             if (foodSection.classList.contains('active')) createParticle(false);
             else if (!isDone) createParticle(false);
-        }, 1000);
+        }, 800);
 
-        // Music Trigger
-        document.addEventListener("click", () => {
+        // Music Trigger - รองรับทั้ง click และ touch
+        const startAudio = () => {
             const bgm = document.getElementById("bgm");
-            bgm.addEventListener("loadedmetadata", () => {
-                bgm.currentTime = 21;
-                bgm.muted = false;
-                bgm.play();
-            }, { once: true });
-            bgm.load();
-        }, { once: true });
+            bgm.muted = false;
+            bgm.currentTime = 21;
+            bgm.play().catch(() => {});
+            document.removeEventListener("pointerdown", startAudio);
+        };
+        document.addEventListener("pointerdown", startAudio);
     </script>
 </body>
 </html>
