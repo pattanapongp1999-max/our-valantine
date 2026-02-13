@@ -10,14 +10,12 @@
     <style>
         :root {
             --primary-pink: #ff4d6d;
-            --light-pink: #ff758f;
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent !important;
-            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
@@ -79,8 +77,7 @@
             max-height: 240px;
             position: relative;
             cursor: pointer;
-            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.4));
-            outline: none;
+            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
         }
 
         svg {
@@ -90,28 +87,20 @@
         }
 
         .outline {
-            fill: rgba(255, 255, 255, 0.3);
+            fill: rgba(255, 255, 255, 0.4);
             stroke: #fff;
-            stroke-width: 8;
+            stroke-width: 10;
         }
 
         .fill {
             fill: var(--primary-pink);
             stroke: #fff;
-            stroke-width: 8;
+            stroke-width: 10;
             clip-path: url(#heartClip);
         }
 
-        /* เส้นแสงที่ขอบน้ำสีชมพู */
-        .glow-line {
-            fill: none;
-            stroke: rgba(255, 255, 255, 0.8);
-            stroke-width: 4;
-            filter: url(#glowFilter);
-        }
-
         .hint {
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 1.1rem;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -123,7 +112,7 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section --- */
+        /* --- Reveal Section (Letter) --- */
         .reveal-content {
             position: absolute;
             width: 100%;
@@ -195,7 +184,7 @@
             60% { transform: translateY(-3px); }
         }
 
-        /* --- Food Section --- */
+        /* --- Food Selection Section --- */
         .food-section {
             position: absolute;
             width: 100%;
@@ -241,6 +230,8 @@
             transition: transform 0.2s;
         }
 
+        .food-card:active { transform: scale(0.95); }
+
         .food-card img {
             width: 70px;
             height: 70px;
@@ -280,25 +271,14 @@
                 onpointerleave="stopPress(event)" onpointercancel="stopPress(event)">
                 <svg viewBox="0 0 200 200">
                     <defs>
-                        <filter id="glowFilter" x="-50%" y="-50%" width="200%" height="200%">
-                            <feGaussianBlur stdDeviation="3" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
                         <clipPath id="heartClip">
                             <rect id="clipRect" x="0" y="200" width="200" height="200" />
                         </clipPath>
                     </defs>
-                    
-                    <!-- ส่วนขอบหัวใจ -->
                     <path class="outline"
                         d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    
-                    <!-- ส่วนสีชมพูที่ถูก Clip -->
                     <path class="fill"
                         d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    
-                    <!-- เส้นแสงที่ขยับตามระดับน้ำ -->
-                    <line id="glowLine" class="glow-line" x1="15" y1="200" x2="185" y2="200" clip-path="url(#heartClip)" />
                 </svg>
             </div>
             <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
@@ -327,15 +307,15 @@
             <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
             <div class="food-grid">
                 <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
-                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Sushi">
+                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิฟัวการ์</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิไข่ปลาแซลม่อน')">
-                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Sushi">
+                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิไข่ปลาแซลม่อน</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิท้องปลา')">
-                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Sushi">
+                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิท้องปลา</b></div>
                 </div>
             </div>
@@ -344,12 +324,10 @@
 
     <script>
         const clipRect = document.getElementById("clipRect");
-        const glowLine = document.getElementById("glowLine");
         const heartWrapper = document.getElementById("heartWrapper");
         const revealContent = document.getElementById("revealContent");
         const foodSection = document.getElementById("foodSection");
         const particlesContainer = document.getElementById("particles");
-        const hold = document.getElementById("hold");
 
         let value = 0;
         let isPressing = false;
@@ -357,34 +335,25 @@
 
         function startPress(e) {
             if (isDone) return;
-            e.preventDefault();
             if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
             isPressing = true;
         }
 
         function stopPress(e) {
             isPressing = false;
-            if (e.pointerType === 'touch' && hold.hasPointerCapture(e.pointerId)) {
-                hold.releasePointerCapture(e.pointerId);
-            }
+            if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
         }
 
         function loop() {
             if (isPressing && !isDone) {
+                // ปรับความเร็วให้น้อยลง (จากเดิม 1.8 เหลือ 0.8) เพื่อให้กดแช่นานขึ้น
                 value += 0.8; 
                 if (value >= 100) {
                     value = 100;
                     isDone = true;
                     finish();
                 }
-                const newY = 200 - (value * 1.75);
-                clipRect.setAttribute("y", newY);
-                
-                // ให้เส้นแสงเคลื่อนที่ตามระนาบน้ำสีชมพู
-                glowLine.setAttribute("y1", newY);
-                glowLine.setAttribute("y2", newY);
-                glowLine.style.opacity = (value > 0 && value < 100) ? 1 : 0;
-
+                clipRect.setAttribute("y", 200 - (value * 1.75));
                 if (Math.random() > 0.8) createParticle(true);
             }
             requestAnimationFrame(loop);
@@ -392,7 +361,6 @@
         loop();
 
         function finish() {
-            glowLine.style.opacity = 0;
             for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
             heartWrapper.classList.add("hidden");
             setTimeout(() => {
@@ -423,4 +391,33 @@
             p.className = "heart-particle";
             p.innerHTML = ["❤", "💖", "🤍", "🌸"][Math.floor(Math.random() * 4)];
             p.style.left = Math.random() * 100 + "vw";
-            p.style.top = "105vh
+            p.style.top = "105vh";
+
+            const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
+            const dur = burst ? 2 : 4;
+            p.style.animationDuration = dur + "s";
+            particlesContainer.appendChild(p);
+            setTimeout(() => p.remove(), dur * 1000);
+        }
+
+        setInterval(() => {
+            if (foodSection.classList.contains('active')) createParticle(false);
+            else if (!isDone) createParticle(false);
+        }, 1000);
+
+        // Music Trigger
+        document.addEventListener("click", () => {
+            const bgm = document.getElementById("bgm");
+            bgm.addEventListener("loadedmetadata", () => {
+                bgm.currentTime = 21;
+                bgm.muted = false;
+                bgm.play();
+            }, { once: true });
+            bgm.load();
+        }, { once: true });
+    </script>
+</body>
+</html>
