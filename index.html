@@ -9,16 +9,16 @@
     <style>
         :root {
             --primary-pink: #ff4d6d;
-            --deep-pink: #c9184a;
-            --soft-pink: #ffb3c1;
             --soft-cream: #fff9f0;
-            --paper-shadow: rgba(0, 0, 0, 0.15);
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            /* ป้องกันการเลือกข้อความหรือเมนูเด้งเวลาดูในไลน์ */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
@@ -31,8 +31,9 @@
             justify-content: center;
             align-items: center;
             font-family: 'Sriracha', cursive, sans-serif;
-            color: #5d4037;
             overflow: hidden;
+            /* สำคัญมาก: ป้องกันบราวเซอร์ไลน์แย่งจับ Event */
+            touch-action: none;
         }
 
         #particles {
@@ -50,25 +51,22 @@
             z-index: 10;
             width: 90%;
             max-width: 400px;
-            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* --- Heart Section --- */
         .heart-wrapper {
             position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.8s ease-in-out;
         }
 
         .heart-wrapper.fade-away {
             opacity: 0;
-            transform: translateY(-100px) scale(0.2);
-            pointer-events: none;
+            transform: translateY(-100px) scale(0);
         }
 
         .heart-area {
@@ -76,41 +74,32 @@
             height: 60vw;
             max-width: 220px;
             max-height: 220px;
-            cursor: pointer;
             position: relative;
             filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
-            transition: transform 0.2s ease;
-        }
-
-        .heart-area:active {
-            transform: scale(0.95);
         }
 
         svg {
             width: 100%;
             height: 100%;
             display: block;
+            overflow: visible;
         }
 
-        /* ใช้ Path เดียวกันทั้งหมดเพื่อความสมมาตร */
-        .heart-path {
-            d: path("M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z");
-        }
-
+        /* ปรับให้เขียน Path ไว้ใน HTML แทน CSS เพื่อให้ LINE อ่านได้ชัวร์ๆ */
         .outline {
             fill: rgba(255, 255, 255, 0.3);
             stroke: #fff;
-            stroke-width: 10; /* เพิ่มความหนาให้ดูนุ่มนวล */
+            stroke-width: 10;
             stroke-linejoin: round;
         }
 
         .fill {
             fill: var(--primary-pink);
-            stroke: #fff; /* ใส่เส้นขอบขาวให้ตัวเติมด้วยเพื่อให้ขอบเท่ากันเสมอ */
+            stroke: #fff;
             stroke-width: 10;
             stroke-linejoin: round;
-            clip-path: inset(100% 0 0 0);
-            transition: clip-path 0.1s linear;
+            /* ใช้คลิปแบบดั้งเดิมที่บราวเซอร์เก่าๆ รองรับได้ดีกว่า */
+            clip-path: url(#heartClip);
         }
 
         .hint {
@@ -126,7 +115,7 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section (Scrapbook Style) --- */
+        /* --- Reveal Section --- */
         .reveal-content {
             position: absolute;
             width: 100%;
@@ -134,16 +123,14 @@
             flex-direction: column;
             align-items: center;
             opacity: 0;
-            transform: scale(0.8) rotate(-5deg);
+            transform: scale(0.8);
             transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none;
             visibility: hidden;
         }
 
         .reveal-content.active {
             opacity: 1;
-            transform: scale(1) rotate(0deg);
-            pointer-events: auto;
+            transform: scale(1);
             visibility: visible;
         }
 
@@ -152,47 +139,31 @@
             max-width: 260px;
             background: white;
             padding: 12px 12px 45px 12px;
-            box-shadow: 0 15px 35px var(--paper-shadow);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             position: relative;
             transform: rotate(-2deg);
-            z-index: 2;
         }
 
         .photo-frame img {
             width: 100%;
             display: block;
             height: auto;
-            border: 1px solid #f0f0f0;
         }
 
         .paper {
             margin-top: -20px;
             background: var(--soft-cream);
-            background-image: linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
-            background-size: 100% 30px;
-            color: #4e342e;
-            padding: 35px 25px;
+            padding: 30px 20px;
             border-radius: 2px;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            box-shadow: 5px 10px 25px var(--paper-shadow);
+            font-size: 1.1rem;
+            line-height: 1.5;
+            box-shadow: 5px 10px 25px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 320px;
-            position: relative;
             border-left: 6px solid var(--primary-pink);
             transform: rotate(1deg);
-            z-index: 1;
+            color: #4e342e;
         }
-
-        .sticker {
-            position: absolute;
-            font-size: 2.2rem;
-            z-index: 10;
-            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.1));
-        }
-
-        .s1 { top: -15px; right: -10px; transform: rotate(10deg); }
-        .s2 { bottom: -15px; left: -10px; transform: rotate(-15deg); }
 
         .heart-particle {
             position: absolute;
@@ -202,10 +173,9 @@
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            0% { transform: translateY(0) opacity: 0; }
             10% { opacity: 0.8; }
-            90% { opacity: 0.8; }
-            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+            100% { transform: translateY(-110vh) opacity: 0; }
         }
     </style>
 </head>
@@ -214,118 +184,60 @@
     <div id="particles"></div>
 
     <div class="container">
-        <!-- Heart Interaction -->
         <div class="heart-wrapper" id="heartWrapper">
             <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
-                    <!-- เส้นขอบฐาน -->
-                    <path class="heart-path outline" />
-                    <!-- ตัวเติมสี (ใช้เส้นขอบขนาดเดียวกันเพื่อความเท่ากัน) -->
-                    <path id="fill" class="heart-path fill" />
+                    <defs>
+                        <clipPath id="heartClip">
+                            <rect id="clipRect" x="0" y="200" width="200" height="200" />
+                        </clipPath>
+                    </defs>
+                    <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <path class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
-            <div class="hint" id="hint">กดค้างเติมรักให้เต็มนะ 🤍</div>
+            <div class="hint" id="hint">บี๋ลองกดหัวใจให้เต็มดูนะคั้บบ 🤍</div>
         </div>
 
-        <!-- Scrapbook Content -->
         <div class="reveal-content" id="revealContent">
-            <div class="sticker s1">🌸</div>
             <div class="photo-frame">
-                <img src="mf.jpg" alt="[Image of Valentine Photo]" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg" alt="Valentine" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
-
             <div class="paper">
-                <div class="sticker s2">🎀</div>
                 บี๋คั้บ.. 🤍<br>
-                ขอบคุณนะที่คอยอยู่ข้างกัน<br>
-                ขอบคุณที่ทำให้เค้ามีความสุขในทุกวัน<br>
-                เค้าตั้งใจเขียนให้เธอเลยนะ<br><br>
-                <b>รักเธอที่สุดในโลกเลย!</b><br>
-                <span style="font-size: 0.85rem; opacity: 0.6;">- วาเลนไทน์ปีนี้และปีต่อๆ ไป -</span>
+                นี่คือวาเลนไทน์ครั้งแรกของคู่เรานะ<br>
+                นี่ก็ผ่านมา 9 เดือนกว่าๆแล้วนะ<br>
+                เธอดูสิ ผ่านทั้งทุกข์ ทั้งสุขมาเยอะมากเลยเนาะ<br>
+                ขอบคุณที่ยังอยู่เคียงข้างกันตลอดนะ<br>
+                อยู่ด้วยกันให้ครบ 99.99 ปีตามที่เธอพูดเลยนะ<br>
+                เค้าสัญญา ว่าเค้าจะเป็นแบบนี้ตลอดไปนะคั้บบ<br> 
+                รักเธอที่สุดในโลกเลย!<br><br>
+                <b>Happy Valentine's Day .. 🤍</b>
             </div>
         </div>
     </div>
 
 <script>
     const hold = document.getElementById("hold");
-    const fill = document.getElementById("fill");
+    const clipRect = document.getElementById("clipRect");
     const heartWrapper = document.getElementById("heartWrapper");
     const revealContent = document.getElementById("revealContent");
     const particlesContainer = document.getElementById("particles");
 
-    let pressing = false;
     let value = 0;
+    let pressing = false;
     let done = false;
-    let particleInterval;
 
-    const emojis = ["❤", "💖", "🌸", "✨", "🤍", "🌷", "🍭"];
-
-    function createParticle(isBurst = false) {
-        const p = document.createElement("div");
-        p.className = "heart-particle";
-        p.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-        p.style.left = Math.random() * 100 + "vw";
-        p.style.top = "105vh";
-        p.style.fontSize = (isBurst ? Math.random() * 20 + 20 : Math.random() * 12 + 10) + "px";
-        const duration = isBurst ? Math.random() * 2 + 1.5 : Math.random() * 4 + 3;
-        p.style.animationDuration = duration + "s";
-        particlesContainer.appendChild(p);
-        setTimeout(() => p.remove(), duration * 1000);
-    }
-
-    // พื้นหลังละอองดาว
-    setInterval(() => { if(!done) createParticle(); }, 900);
-
+    // แก้ปัญหาเรื่อง Touch บน LINE
     function start(e) {
-        if(done) return;
-        if(e.cancelable) e.preventDefault();
+        if (done) return;
+        // ป้องกันบราวเซอร์ดึงหน้าจอ (Pull to refresh)
+        if (e.cancelable) e.preventDefault();
         pressing = true;
-        particleInterval = setInterval(() => createParticle(true), 120);
     }
 
     function stop() {
         pressing = false;
-        clearInterval(particleInterval);
     }
 
-    // Loop เติมหัวใจ
-    setInterval(() => {
-        if (!pressing || done) return;
-        value += 1.6; 
-        if (value > 100) value = 100;
-        
-        // อัปเดตการเติม
-        fill.style.clipPath = `inset(${100 - value}% 0 0 0)`;
-        
-        if (value >= 100) {
-            done = true;
-            pressing = false;
-            clearInterval(particleInterval);
-            triggerFinalEffect();
-        }
-    }, 30);
-
-    function triggerFinalEffect() {
-        // เอฟเฟกต์พลุกระจาย
-        for(let i=0; i<45; i++) {
-            setTimeout(() => createParticle(true), i * 25);
-        }
-
-        // หัวใจลอยหายไปแบบนุ่มๆ
-        heartWrapper.classList.add("fade-away");
-
-        // แสดง Scrapbook
-        setTimeout(() => {
-            revealContent.classList.add("active");
-        }, 600);
-    }
-
-    // Events
-    hold.addEventListener("mousedown", start);
-    window.addEventListener("mouseup", stop);
-    hold.addEventListener("touchstart", start, {passive: false});
-    window.addEventListener("touchend", stop);
-</script>
-
-</body>
-</html>
+    // Loop เติมหัว
