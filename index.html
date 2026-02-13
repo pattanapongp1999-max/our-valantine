@@ -34,30 +34,6 @@
             overflow: hidden;
         }
 
-        /* --- Floating Stickers Background --- */
-        .stickers-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* อยู่หลัง Container แต่หน้า Background */
-            pointer-events: none;
-        }
-
-        .floating-sticker {
-            position: absolute;
-            font-size: 2rem;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-            animation: floatSlow 6s ease-in-out infinite;
-            opacity: 0.8;
-        }
-
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0) rotate(var(--r)); }
-            50% { transform: translateY(-20px) rotate(calc(var(--r) + 10deg)); }
-        }
-
         #particles {
             position: fixed;
             top: 0;
@@ -65,12 +41,12 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
+            z-index: 1;
         }
 
         .container {
             position: relative;
-            z-index: 10; /* ให้เนื้อหาอยู่หน้าสุดเสมอ */
+            z-index: 10;
             width: 90%;
             max-width: 400px;
             display: flex;
@@ -136,7 +112,7 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section --- */
+        /* --- Reveal Section (Letter) --- */
         .reveal-content {
             position: absolute;
             width: 100%;
@@ -202,7 +178,13 @@
             animation: bounce 2s infinite;
         }
 
-        /* --- Food Selection --- */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        /* --- Food Selection Section --- */
         .food-section {
             position: absolute;
             width: 100%;
@@ -248,10 +230,21 @@
             transition: transform 0.2s;
         }
 
+        .food-card:active { transform: scale(0.95); }
+
+        .food-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .food-info b { color: var(--primary-pink); font-size: 1.2rem; }
+
         .heart-particle {
             position: absolute;
             pointer-events: none;
-            z-index: 5;
+            z-index: 2;
             animation: floatUp linear forwards;
         }
 
@@ -268,9 +261,6 @@
     <audio id="bgm" loop muted>
         <source src="thank-you.mp3" type="audio/mpeg">
     </audio>
-
-    <!-- Layer สำหรับสติ๊กเกอร์ลอยๆ -->
-    <div class="stickers-container" id="stickersContainer"></div>
 
     <div id="particles"></div>
 
@@ -338,45 +328,10 @@
         const revealContent = document.getElementById("revealContent");
         const foodSection = document.getElementById("foodSection");
         const particlesContainer = document.getElementById("particles");
-        const stickersContainer = document.getElementById("stickersContainer");
 
         let value = 0;
         let isPressing = false;
         let isDone = false;
-
-        // รายการสติ๊กเกอร์เกี่ยวกับความรัก
-        const loveStickers = ['💖', '💌', '🧸', '🌹', '💑', '💝', '✨', '💍', '🕊️', '💐', '💕', '🍭'];
-
-        function initFloatingStickers() {
-            // สร้างสติ๊กเกอร์ 15 ชิ้น กระจายรอบๆ
-            for (let i = 0; i < 15; i++) {
-                const s = document.createElement('div');
-                s.className = 'floating-sticker';
-                s.innerHTML = loveStickers[Math.floor(Math.random() * loveStickers.length)];
-                
-                // สุ่มตำแหน่งให้อยู่ขอบๆ จอ (เลี่ยงช่วงกลาง 30%-70%)
-                let left;
-                const side = Math.random();
-                if (side < 0.5) {
-                    left = Math.random() * 25; // ฝั่งซ้าย
-                } else {
-                    left = 75 + (Math.random() * 20); // ฝั่งขวา
-                }
-                
-                const top = Math.random() * 90;
-                
-                s.style.left = left + 'vw';
-                s.style.top = top + 'vh';
-                s.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
-                
-                // สุ่มดีเลย์แอนิเมชั่นเพื่อให้ลอยไม่พร้อมกัน
-                s.style.animationDelay = (Math.random() * 5) + 's';
-                s.style.animationDuration = (5 + Math.random() * 3) + 's';
-                
-                stickersContainer.appendChild(s);
-            }
-        }
-        initFloatingStickers();
 
         function startPress(e) {
             if (isDone) return;
@@ -391,6 +346,7 @@
 
         function loop() {
             if (isPressing && !isDone) {
+                // ปรับความเร็วให้น้อยลง (จากเดิม 1.8 เหลือ 0.8) เพื่อให้กดแช่นานขึ้น
                 value += 0.8; 
                 if (value >= 100) {
                     value = 100;
@@ -407,10 +363,6 @@
         function finish() {
             for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
             heartWrapper.classList.add("hidden");
-            // เมื่อกดสำเร็จ ให้ซ่อนสติ๊กเกอร์ขอบจอไปชั่วคราวเพื่อเปิดทางให้จดหมาย
-            stickersContainer.style.transition = "opacity 1s";
-            stickersContainer.style.opacity = "0.3";
-
             setTimeout(() => {
                 revealContent.classList.add("active");
             }, 700);
@@ -421,7 +373,6 @@
             setTimeout(() => {
                 revealContent.style.display = "none";
                 foodSection.classList.add("active");
-                stickersContainer.style.opacity = "0.8"; // กลับมาโชว์ใหม่
             }, 600);
         }
 
