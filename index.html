@@ -108,17 +108,8 @@
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.6;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
 
         /* --- Reveal Section (Letter) --- */
@@ -188,22 +179,9 @@
         }
 
         @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-5px);
-            }
-
-            60% {
-                transform: translateY(-3px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
         }
 
         /* --- Food Selection Section --- */
@@ -252,9 +230,7 @@
             transition: transform 0.2s;
         }
 
-        .food-card:active {
-            transform: scale(0.95);
-        }
+        .food-card:active { transform: scale(0.95); }
 
         .food-card img {
             width: 70px;
@@ -263,12 +239,8 @@
             object-fit: cover;
         }
 
-        .food-info b {
-            color: var(--primary-pink);
-            font-size: 1.2rem;
-        }
+        .food-info b { color: var(--primary-pink); font-size: 1.2rem; }
 
-        /* --- Particles --- */
         .heart-particle {
             position: absolute;
             pointer-events: none;
@@ -277,19 +249,9 @@
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(0);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.8;
-            }
-
-            100% {
-                transform: translateY(-110vh);
-                opacity: 0;
-            }
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-110vh); opacity: 0; }
         }
     </style>
 </head>
@@ -345,15 +307,15 @@
             <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
             <div class="food-grid">
                 <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
-                    <img src="1.jpg" alt="Shabu">
+                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิฟัวการ์</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิไข่ปลาแซลม่อน')">
-                    <img src="3.jpg" alt="BBQ">
+                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิไข่ปลาแซลม่อน</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิท้องปลา')">
-                    <img src="2.jpg" alt="Japanese">
+                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Food">
                     <div class="food-info"><b>ซูชิท้องปลา</b></div>
                 </div>
             </div>
@@ -384,7 +346,8 @@
 
         function loop() {
             if (isPressing && !isDone) {
-                value += 1.8;
+                // ปรับความเร็วให้น้อยลง (จากเดิม 1.8 เหลือ 0.8) เพื่อให้กดแช่นานขึ้น
+                value += 0.8; 
                 if (value >= 100) {
                     value = 100;
                     isDone = true;
@@ -444,22 +407,17 @@
             if (foodSection.classList.contains('active')) createParticle(false);
             else if (!isDone) createParticle(false);
         }, 1000);
-    </script>
 
-        <script>
+        // Music Trigger
         document.addEventListener("click", () => {
             const bgm = document.getElementById("bgm");
-
             bgm.addEventListener("loadedmetadata", () => {
                 bgm.currentTime = 21;
                 bgm.muted = false;
                 bgm.play();
             }, { once: true });
-
             bgm.load();
         }, { once: true });
     </script>
-
 </body>
-
 </html>
