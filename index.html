@@ -353,7 +353,7 @@
     function selectFood(choice) {
         for(let i=0; i<20; i++) setTimeout(() => createParticle(true), i * 40);
         const title = document.querySelector('.food-title');
-        title.innerHTML = `จัดไปคั้บ! ${choice} นะบี๋ 💖`;
+        title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
         document.querySelectorAll('.food-card').forEach(card => {
             card.style.pointerEvents = "none";
             card.style.opacity = "0.7";
