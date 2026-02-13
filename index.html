@@ -11,6 +11,7 @@
         :root {
             --primary-pink: #ff4d6d;
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            --fill-level: 100%; /* ควบคุมการเติมสีจาก 100% ถึง 0% */
         }
 
         * {
@@ -47,21 +48,20 @@
         .container {
             position: relative;
             z-index: 10;
-            width: 90%;
-            max-width: 400px;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
         }
 
         /* --- Heart Section --- */
         .heart-wrapper {
-            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             transition: all 0.6s ease;
+            width: 100%;
         }
 
         .heart-wrapper.hidden {
@@ -71,56 +71,49 @@
         }
 
         .heart-area {
-            width: 65vw;
-            height: 65vw;
-            max-width: 240px;
-            max-height: 240px;
+            width: 250px;
+            height: 250px;
             position: relative;
             cursor: pointer;
             filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.4));
+            /* ป้องกันหัวใจหายด้วยการระบุขนาดที่แน่นอน */
+            display: block; 
         }
 
         svg {
             width: 100%;
             height: 100%;
-            pointer-events: none;
             overflow: visible;
         }
 
-        .heart-path {
+        /* ใช้วิธีเปลี่ยนสีผ่าน Linear Gradient แทน Mask เพื่อความเสถียรบนมือถือ */
+        .heart-main {
+            fill: url(#heartGradient);
+            stroke: #fff;
+            stroke-width: 6;
+            stroke-linejoin: round;
             d: path("M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z");
         }
 
-        .outline {
-            fill: rgba(255, 255, 255, 0.4);
-            stroke: #fff;
-            stroke-width: 10;
-        }
-
-        .fill-layer {
-            fill: var(--primary-pink);
-            stroke: #fff;
-            stroke-width: 10;
-            mask: url(#heartMask);
-        }
-
         .hint {
-            margin-top: 20px;
-            font-size: 1.1rem;
+            margin-top: 30px;
+            font-size: 1.2rem;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             animation: pulse 2s infinite;
+            text-align: center;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
+            0%, 100% { opacity: 0.7; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
 
         /* --- Reveal Section (Letter) --- */
         .reveal-content {
             position: absolute;
-            width: 100%;
+            width: 90%;
+            max-width: 350px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -128,7 +121,6 @@
             transform: scale(0.5);
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             visibility: hidden;
-            margin-bottom: 40px;
         }
 
         .reveal-content.active {
@@ -145,11 +137,11 @@
 
         .photo-frame {
             width: 100%;
-            max-width: 260px;
             background: white;
             padding: 12px 12px 40px 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             transform: rotate(-2deg);
+            z-index: 2;
         }
 
         .photo-frame img {
@@ -159,40 +151,35 @@
         }
 
         .paper {
-            margin-top: -20px;
+            margin-top: -25px;
             background: #fff9f0;
-            padding: 25px;
-            width: 90%;
+            padding: 30px 20px 20px 20px;
+            width: 95%;
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid var(--primary-pink);
+            border-left: 6px solid var(--primary-pink);
             color: #4e342e;
             text-align: center;
+            line-height: 1.6;
         }
 
         .btn-next {
-            margin-top: 20px;
-            padding: 12px 30px;
+            margin-top: 25px;
+            padding: 14px 35px;
             background: var(--primary-pink);
             color: white;
             border: none;
-            border-radius: 25px;
+            border-radius: 30px;
             font-family: 'Sriracha', cursive;
-            font-size: 1.1rem;
-            cursor: pointer;
+            font-size: 1.2rem;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-            animation: bounce 2s infinite;
+            cursor: pointer;
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-            60% { transform: translateY(-3px); }
-        }
-
-        /* --- Food Selection Section --- */
+        /* --- Food Choice --- */
         .food-section {
             position: absolute;
-            width: 100%;
+            width: 90%;
+            max-width: 380px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -208,92 +195,72 @@
             visibility: visible;
         }
 
-        .food-title {
-            color: white;
-            font-size: 1.4rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-            padding: 0 10px;
-        }
-
         .food-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
+            gap: 12px;
             width: 100%;
         }
 
         .food-card {
             background: white;
-            padding: 10px;
-            border-radius: 15px;
+            padding: 12px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
-
-        .food-card:active { transform: scale(0.95); }
 
         .food-card img {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
+            width: 65px;
+            height: 65px;
+            border-radius: 12px;
             object-fit: cover;
         }
-
-        .food-info b { color: var(--primary-pink); font-size: 1.2rem; }
 
         .heart-particle {
             position: absolute;
             pointer-events: none;
-            z-index: 2;
             animation: floatUp linear forwards;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            100% { transform: translateY(-110vh); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
 
-    <audio id="bgm" loop muted>
+    <audio id="bgm" loop>
         <source src="thank-you.mp3" type="audio/mpeg">
     </audio>
 
     <div id="particles"></div>
 
     <div class="container">
-        <!-- Section 1: Heart Press -->
+        <!-- Section 1: Heart -->
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold">
+            <div class="heart-area" id="holdArea">
                 <svg viewBox="0 0 200 200">
                     <defs>
-                        <!-- ใช้ Mask แทน ClipPath เพื่อแก้ปัญหาเส้นขาวขยับตามบนมือถือ -->
-                        <mask id="heartMask">
-                            <rect x="0" y="0" width="200" height="200" fill="black" />
-                            <rect id="maskRect" x="0" y="200" width="200" height="200" fill="white" />
-                        </mask>
+                        <!-- ใช้ Gradient เพื่อควบคุมการเติมสีแทน Masking เพื่อความนิ่งบน Mobile -->
+                        <linearGradient id="heartGradient" x1="0" y1="1" x2="0" y2="0">
+                            <stop offset="0%" stop-color="#ff4d6d" />
+                            <stop id="gradOffset1" offset="0%" stop-color="#ff4d6d" />
+                            <stop id="gradOffset2" offset="0%" stop-color="rgba(255,255,255,0.4)" />
+                            <stop offset="100%" stop-color="rgba(255,255,255,0.4)" />
+                        </linearGradient>
                     </defs>
-                    
-                    <!-- ฐานสีขาวจาง -->
-                    <path class="heart-path outline" />
-                    
-                    <!-- สีชมพูที่อยู่ภายใต้ Mask -->
-                    <path class="heart-path fill-layer" />
+                    <path class="heart-main" />
                 </svg>
             </div>
-            <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
+            <div class="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
         </div>
 
-        <!-- Section 2: Letter Reveal -->
+        <!-- Section 2: Letter -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
                 <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
@@ -307,137 +274,131 @@
                 รักฟ้าที่สุดในโลกเลย!<br><br>
                 <b>Happy Valentine's Day .. 🤍</b>
             </div>
-            <button class="btn-next" onclick="goToFood()">ตามมานี่ๆ มาช่วยเลือกหน่อย ✨</button>
+            <button class="btn-next" onclick="goToFood()">ไปเลือกของกินกัน! ✨</button>
         </div>
 
-        <!-- Section 3: Food Choice -->
+        <!-- Section 3: Food -->
         <div class="food-section" id="foodSection">
-            <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
+            <div class="hint" style="margin-bottom: 20px; font-weight: bold;">เลือกวาสนาของบี๋วันนี้สิ? 😋</div>
             <div class="food-grid">
                 <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
-                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิฟัวการ์</b></div>
+                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'">
+                    <b>ซูชิฟัวการ์</b>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิไข่ปลาแซลม่อน')">
-                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิไข่ปลาแซลม่อน</b></div>
+                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'">
+                    <b>ซูชิไข่ปลาแซลม่อน</b>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิท้องปลา')">
-                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิท้องปลา</b></div>
+                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'">
+                    <b>ซูชิท้องปลา</b>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const maskRect = document.getElementById("maskRect");
-        const heartWrapper = document.getElementById("heartWrapper");
-        const revealContent = document.getElementById("revealContent");
-        const foodSection = document.getElementById("foodSection");
-        const particlesContainer = document.getElementById("particles");
-        const holdArea = document.getElementById("hold");
+        const holdArea = document.getElementById('holdArea');
+        const grad1 = document.getElementById('gradOffset1');
+        const grad2 = document.getElementById('gradOffset2');
+        const heartWrapper = document.getElementById('heartWrapper');
+        const revealContent = document.getElementById('revealContent');
+        const foodSection = document.getElementById('foodSection');
+        const particles = document.getElementById('particles');
 
         let progress = 0;
         let isPressing = false;
         let isDone = false;
 
-        // จัดการเรื่อง Touch ให้แม่นยำขึ้น
+        // จัดการ Input สำหรับ Mobile
         holdArea.addEventListener('pointerdown', (e) => {
             if (isDone) return;
-            holdArea.setPointerCapture(e.pointerId);
             isPressing = true;
+            holdArea.setPointerCapture(e.pointerId);
+            startMusic();
         });
 
-        holdArea.addEventListener('pointerup', () => isPressing = false);
-        holdArea.addEventListener('pointercancel', () => isPressing = false);
-        holdArea.addEventListener('pointerleave', () => isPressing = false);
+        const stopPress = () => isPressing = false;
+        holdArea.addEventListener('pointerup', stopPress);
+        holdArea.addEventListener('pointercancel', stopPress);
 
-        function updateLoop() {
+        function update() {
             if (isPressing && !isDone) {
-                progress += 0.85; // ปรับความเร็ว
-                
+                progress += 0.8;
                 if (progress >= 100) {
                     progress = 100;
                     isDone = true;
                     onFinish();
                 }
+                // อัปเดต Gradient (เลื่อนจุดตัดสี)
+                grad1.setAttribute('offset', progress + '%');
+                grad2.setAttribute('offset', progress + '%');
                 
-                // เลื่อนหน้ากากสีขาวขึ้นไป (Masking)
-                // y = 200 (ล่างสุด) -> y = 20 (บนสุดเพื่อให้ครอบคลุม stroke)
-                const yPos = 200 - (progress * 1.8);
-                maskRect.setAttribute("y", yPos);
-                
-                if (Math.random() > 0.8) createParticle(true);
+                if (Math.random() > 0.7) createParticle(true);
             }
-            requestAnimationFrame(updateLoop);
+            requestAnimationFrame(update);
         }
-        updateLoop();
+        update();
 
         function onFinish() {
-            // เอฟเฟกต์ตอนจบ
-            for (let i = 0; i < 35; i++) {
-                setTimeout(() => createParticle(true), i * 30);
+            // เอฟเฟกต์พลุหัวใจ
+            for(let i=0; i<40; i++) {
+                setTimeout(() => createParticle(true), i * 40);
             }
             
             setTimeout(() => {
-                heartWrapper.classList.add("hidden");
+                heartWrapper.classList.add('hidden');
                 setTimeout(() => {
-                    heartWrapper.style.display = "none";
-                    revealContent.classList.add("active");
+                    heartWrapper.style.display = 'none';
+                    revealContent.classList.add('active');
                 }, 600);
-            }, 300);
+            }, 400);
         }
 
         function goToFood() {
-            revealContent.classList.add("hidden");
+            revealContent.classList.add('hidden');
             setTimeout(() => {
-                revealContent.style.display = "none";
-                foodSection.classList.add("active");
+                revealContent.style.display = 'none';
+                foodSection.classList.add('active');
             }, 600);
         }
 
-        function selectFood(choice) {
-            for (let i = 0; i < 20; i++) setTimeout(() => createParticle(true), i * 40);
-            const title = document.querySelector('.food-title');
-            title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
-            document.querySelectorAll('.food-card').forEach(card => {
-                card.style.pointerEvents = "none";
-                card.style.opacity = "0.7";
-            });
+        function selectFood(name) {
+            document.querySelector('#foodSection .hint').innerHTML = `จัดไปคั้บ! เดี๋ยวพาไปกินทั้ง 3 อย่างเลยยย 💖`;
+            for(let i=0; i<20; i++) setTimeout(() => createParticle(true), i * 50);
         }
 
         function createParticle(burst) {
-            const p = document.createElement("div");
-            p.className = "heart-particle";
-            p.innerHTML = ["❤", "💖", "🤍", "🌸", "✨"][Math.floor(Math.random() * 5)];
-            p.style.left = Math.random() * 100 + "vw";
-            p.style.top = "105vh";
-
-            const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
-            p.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-            p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
-            const dur = burst ? 2 : 4;
-            p.style.animationDuration = dur + "s";
-            particlesContainer.appendChild(p);
-            setTimeout(() => p.remove(), dur * 1000);
+            const p = document.createElement('div');
+            p.className = 'heart-particle';
+            p.innerHTML = ['❤', '💖', '🤍', '✨', '🌸'][Math.floor(Math.random() * 5)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = '105vh';
+            p.style.fontSize = (burst ? Math.random() * 25 + 15 : 12) + 'px';
+            
+            const duration = burst ? (Math.random() * 2 + 2) : (Math.random() * 3 + 3);
+            p.style.animationDuration = duration + 's';
+            p.style.opacity = Math.random();
+            
+            particles.appendChild(p);
+            setTimeout(() => p.remove(), duration * 1000);
         }
 
-        setInterval(() => {
-            if (foodSection.classList.contains('active')) createParticle(false);
-            else if (!isDone) createParticle(false);
-        }, 800);
+        function startMusic() {
+            const bgm = document.getElementById('bgm');
+            if (bgm.paused) {
+                bgm.muted = false;
+                bgm.currentTime = 21; // เริ่มที่ท่อนฮุค
+                bgm.play().catch(e => console.log("Audio play deferred"));
+            }
+        }
 
-        // Music Trigger - รองรับทั้ง click และ touch
-        const startAudio = () => {
-            const bgm = document.getElementById("bgm");
-            bgm.muted = false;
-            bgm.currentTime = 21;
-            bgm.play().catch(() => {});
-            document.removeEventListener("pointerdown", startAudio);
-        };
-        document.addEventListener("pointerdown", startAudio);
+        // อนุภาคลอยพื้นหลัง
+        setInterval(() => {
+            if(!isDone || foodSection.classList.contains('active')) createParticle(false);
+        }, 700);
+
     </script>
 </body>
+
 </html>
