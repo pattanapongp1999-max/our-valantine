@@ -12,12 +12,13 @@
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
+        /* สำคัญมาก: ปิดทุกอย่างที่อาจขวางการจิ้ม */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: none; 
+            touch-action: none !important; 
         }
 
         body {
@@ -31,6 +32,7 @@
             align-items: center;
             font-family: 'Sriracha', cursive, sans-serif;
             overflow: hidden;
+            position: fixed; /* ป้องกันการเลื่อนหน้าจอใน iOS LINE */
         }
 
         #particles {
@@ -68,41 +70,42 @@
         }
 
         .heart-area {
-            width: 65vw;
-            height: 65vw;
-            max-width: 240px;
-            max-height: 240px;
+            width: 70vw;
+            height: 70vw;
+            max-width: 250px;
+            max-height: 250px;
             position: relative;
             cursor: pointer;
-            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
+            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.4));
+            /* บังคับให้พื้นที่นี้รับ Pointer Events เท่านั้น */
+            pointer-events: auto;
         }
 
         svg {
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            pointer-events: none; /* ปล่อยให้จิ้มทะลุไปที่ heart-area */
         }
 
         .outline {
             fill: rgba(255, 255, 255, 0.4);
             stroke: #fff;
-            stroke-width: 10;
+            stroke-width: 12;
         }
 
         .fill {
             fill: var(--primary-pink);
             stroke: #fff;
-            stroke-width: 10;
+            stroke-width: 12;
             clip-path: url(#heartClip);
         }
 
         .hint {
-            margin-top: 20px;
-            font-size: 1.1rem;
+            margin-top: 25px;
+            font-size: 1.2rem;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
             text-align: center;
-            transition: opacity 0.3s ease;
         }
 
         /* Reveal Section */
@@ -126,24 +129,25 @@
 
         .photo-frame {
             width: 100%;
-            max-width: 260px;
+            max-width: 280px;
             background: white;
-            padding: 12px 12px 40px 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 15px 15px 50px 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
             transform: rotate(-2deg);
         }
 
-        .photo-frame img { width: 100%; display: block; }
+        .photo-frame img { width: 100%; display: block; border: 1px solid #eee; }
 
         .paper {
-            margin-top: -20px;
+            margin-top: -25px;
             background: #fff9f0;
-            padding: 25px;
-            width: 90%;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
-            border-left: 5px solid var(--primary-pink);
+            padding: 30px 25px;
+            width: 95%;
+            box-shadow: 5px 10px 20px rgba(0,0,0,0.15);
+            border-left: 6px solid var(--primary-pink);
             color: #4e342e;
             text-align: center;
+            font-size: 1.2rem;
         }
 
         .heart-particle {
@@ -156,32 +160,30 @@
         @keyframes floatUp {
             0% { transform: translateY(0); opacity: 0; }
             10% { opacity: 0.8; }
-            100% { transform: translateY(-100vh); opacity: 0; }
+            100% { transform: translateY(-110vh); opacity: 0; }
         }
 
-        /* เอฟเฟกต์สั่นตอนรีเซ็ตรอบแรก */
         .shake {
             animation: shake 0.5s ease-in-out;
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            0%, 100% { transform: translateX(0) rotate(0); }
+            20% { transform: translateX(-10px) rotate(-2deg); }
+            40% { transform: translateX(10px) rotate(2deg); }
+            60% { transform: translateX(-10px) rotate(-1deg); }
+            80% { transform: translateX(10px) rotate(1deg); }
         }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;"> <!-- ปิดเมนูคลิกขวา/กดค้างใน Android -->
 
     <div id="particles"></div>
 
     <div class="container">
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold" 
-                 onpointerdown="startPress(event)" 
-                 onpointerup="stopPress(event)" 
-                 onpointerleave="stopPress(event)"
-                 onpointercancel="stopPress(event)">
+            <!-- ย้าย Event มาใส่ใน JS เพื่อความชัวร์ -->
+            <div class="heart-area" id="hold">
                 <svg viewBox="0 0 200 200">
                     <defs>
                         <clipPath id="heartClip">
@@ -227,16 +229,30 @@
     let currentRound = 1;
     const maxRounds = 2;
 
-    function startPress(e) {
+    // ระบบตรวจจับแบบละเอียด
+    function start(e) {
         if (isDone) return;
-        if (e.pointerType === 'touch') heartArea.setPointerCapture(e.pointerId);
+        
+        // บังคับให้บราวเซอร์ห้ามแย่ง Event นี้ไปทำอย่างอื่น (สำคัญมากสำหรับ LINE)
+        if (e.pointerId !== undefined) {
+            heartArea.setPointerCapture(e.pointerId);
+        }
+        
         isPressing = true;
+        e.preventDefault();
     }
 
-    function stopPress(e) {
+    function stop(e) {
         isPressing = false;
-        if (e.pointerType === 'touch') heartArea.releasePointerCapture(e.pointerId);
+        if (e.pointerId !== undefined) {
+            try { heartArea.releasePointerCapture(e.pointerId); } catch(err) {}
+        }
     }
+
+    // ติดตั้ง Event Listeners ผ่าน JS
+    heartArea.addEventListener('pointerdown', start);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
 
     function loop() {
         if (isPressing && !isDone) {
@@ -245,7 +261,10 @@
                 value = 100;
                 handleCompletion();
             }
-            clipRect.setAttribute("y", 200 - (value * 1.75));
+            // ปรับระยะการเลื่อน Clip ให้แม่นยำขึ้น
+            const yPos = 200 - (value * 1.8);
+            clipRect.setAttribute("y", yPos);
+            
             if(Math.random() > 0.8) createParticle(true);
         }
         requestAnimationFrame(loop);
@@ -253,13 +272,12 @@
     loop();
 
     function handleCompletion() {
+        isPressing = false; // หยุดการกดทันทีที่เต็มรอบ
+        
         if (currentRound < maxRounds) {
-            // จบรอบแรก: ระเบิดหัวใจแล้วรีเซ็ต
-            isPressing = false;
-            triggerBurst(20);
-            
-            // เอฟเฟกต์เขย่าและล้างค่า
+            triggerBurst(25);
             heartArea.classList.add("shake");
+            
             setTimeout(() => {
                 value = 0;
                 clipRect.setAttribute("y", 200);
@@ -267,25 +285,40 @@
                 currentRound++;
                 heartArea.classList.remove("shake");
             }, 600);
-            
         } else {
-            // จบรอบสุดท้าย
             isDone = true;
-            triggerBurst(40);
+            triggerBurst(45);
             heartWrapper.classList.add("fade-away");
             setTimeout(() => {
                 revealContent.classList.add("active");
-            }, 700);
+            }, 800);
         }
     }
 
     function triggerBurst(count) {
         for(let i=0; i<count; i++) {
-            setTimeout(() => createParticle(true), i * 30);
+            setTimeout(() => createParticle(true), i * 20);
         }
     }
 
     function createParticle(burst) {
         const p = document.createElement("div");
         p.className = "heart-particle";
-        p
+        p.innerHTML = "❤";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.top = "105vh";
+        p.style.color = "#fff";
+        p.style.fontSize = (burst ? Math.random() * 20 + 15 : 12) + "px";
+        const dur = burst ? 2 : 4;
+        p.style.animationDuration = dur + "s";
+        particlesContainer.appendChild(p);
+        setTimeout(() => p.remove(), dur * 1000);
+    }
+    
+    // ละอองลอยเบาๆ ในพื้นหลัง
+    setInterval(() => { if(!isDone) createParticle(false); }, 1200);
+
+</script>
+
+</body>
+</html>
