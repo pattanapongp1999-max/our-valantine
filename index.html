@@ -11,7 +11,6 @@
         :root {
             --primary-pink: #ff4d6d;
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
-            --fill-level: 100%; /* ควบคุมการเติมสีจาก 100% ถึง 0% */
         }
 
         * {
@@ -35,6 +34,30 @@
             overflow: hidden;
         }
 
+        /* --- Floating Stickers Background --- */
+        .stickers-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* อยู่หลัง Container แต่หน้า Background */
+            pointer-events: none;
+        }
+
+        .floating-sticker {
+            position: absolute;
+            font-size: 2rem;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            animation: floatSlow 6s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0) rotate(var(--r)); }
+            50% { transform: translateY(-20px) rotate(calc(var(--r) + 10deg)); }
+        }
+
         #particles {
             position: fixed;
             top: 0;
@@ -42,26 +65,27 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 2;
         }
 
         .container {
             position: relative;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
+            z-index: 10; /* ให้เนื้อหาอยู่หน้าสุดเสมอ */
+            width: 90%;
+            max-width: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
 
         /* --- Heart Section --- */
         .heart-wrapper {
+            position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
             transition: all 0.6s ease;
-            width: 100%;
         }
 
         .heart-wrapper.hidden {
@@ -71,49 +95,51 @@
         }
 
         .heart-area {
-            width: 250px;
-            height: 250px;
+            width: 65vw;
+            height: 65vw;
+            max-width: 240px;
+            max-height: 240px;
             position: relative;
             cursor: pointer;
-            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.4));
-            /* ป้องกันหัวใจหายด้วยการระบุขนาดที่แน่นอน */
-            display: block; 
+            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
         }
 
         svg {
             width: 100%;
             height: 100%;
-            overflow: visible;
+            pointer-events: none;
         }
 
-        /* ใช้วิธีเปลี่ยนสีผ่าน Linear Gradient แทน Mask เพื่อความเสถียรบนมือถือ */
-        .heart-main {
-            fill: url(#heartGradient);
+        .outline {
+            fill: rgba(255, 255, 255, 0.4);
             stroke: #fff;
-            stroke-width: 6;
-            stroke-linejoin: round;
-            d: path("M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z");
+            stroke-width: 10;
+        }
+
+        .fill {
+            fill: var(--primary-pink);
+            stroke: #fff;
+            stroke-width: 10;
+            clip-path: url(#heartClip);
         }
 
         .hint {
-            margin-top: 30px;
-            font-size: 1.2rem;
+            margin-top: 20px;
+            font-size: 1.1rem;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             animation: pulse 2s infinite;
-            text-align: center;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section (Letter) --- */
+        /* --- Reveal Section --- */
         .reveal-content {
             position: absolute;
-            width: 90%;
-            max-width: 350px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -121,6 +147,7 @@
             transform: scale(0.5);
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             visibility: hidden;
+            margin-bottom: 40px;
         }
 
         .reveal-content.active {
@@ -137,11 +164,11 @@
 
         .photo-frame {
             width: 100%;
+            max-width: 260px;
             background: white;
             padding: 12px 12px 40px 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transform: rotate(-2deg);
-            z-index: 2;
         }
 
         .photo-frame img {
@@ -151,35 +178,34 @@
         }
 
         .paper {
-            margin-top: -25px;
+            margin-top: -20px;
             background: #fff9f0;
-            padding: 30px 20px 20px 20px;
-            width: 95%;
+            padding: 25px;
+            width: 90%;
             box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
-            border-left: 6px solid var(--primary-pink);
+            border-left: 5px solid var(--primary-pink);
             color: #4e342e;
             text-align: center;
-            line-height: 1.6;
         }
 
         .btn-next {
-            margin-top: 25px;
-            padding: 14px 35px;
+            margin-top: 20px;
+            padding: 12px 30px;
             background: var(--primary-pink);
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 25px;
             font-family: 'Sriracha', cursive;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            font-size: 1.1rem;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+            animation: bounce 2s infinite;
         }
 
-        /* --- Food Choice --- */
+        /* --- Food Selection --- */
         .food-section {
             position: absolute;
-            width: 90%;
-            max-width: 380px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -195,75 +221,84 @@
             visibility: visible;
         }
 
+        .food-title {
+            color: white;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
         .food-grid {
             display: grid;
-            gap: 12px;
+            grid-template-columns: 1fr;
+            gap: 15px;
             width: 100%;
         }
 
         .food-card {
             background: white;
-            padding: 12px;
-            border-radius: 18px;
+            padding: 10px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .food-card img {
-            width: 65px;
-            height: 65px;
-            border-radius: 12px;
-            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
         .heart-particle {
             position: absolute;
             pointer-events: none;
+            z-index: 5;
             animation: floatUp linear forwards;
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) scale(1); opacity: 0; }
-            20% { opacity: 0.8; }
-            100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+            0% { transform: translateY(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            100% { transform: translateY(-110vh); opacity: 0; }
         }
     </style>
 </head>
 
 <body>
 
-    <audio id="bgm" loop>
+    <audio id="bgm" loop muted>
         <source src="thank-you.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- Layer สำหรับสติ๊กเกอร์ลอยๆ -->
+    <div class="stickers-container" id="stickersContainer"></div>
 
     <div id="particles"></div>
 
     <div class="container">
-        <!-- Section 1: Heart -->
+        <!-- Section 1: Heart Press -->
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="holdArea">
+            <div class="heart-area" id="hold" onpointerdown="startPress(event)" onpointerup="stopPress(event)"
+                onpointerleave="stopPress(event)" onpointercancel="stopPress(event)">
                 <svg viewBox="0 0 200 200">
                     <defs>
-                        <!-- ใช้ Gradient เพื่อควบคุมการเติมสีแทน Masking เพื่อความนิ่งบน Mobile -->
-                        <linearGradient id="heartGradient" x1="0" y1="1" x2="0" y2="0">
-                            <stop offset="0%" stop-color="#ff4d6d" />
-                            <stop id="gradOffset1" offset="0%" stop-color="#ff4d6d" />
-                            <stop id="gradOffset2" offset="0%" stop-color="rgba(255,255,255,0.4)" />
-                            <stop offset="100%" stop-color="rgba(255,255,255,0.4)" />
-                        </linearGradient>
+                        <clipPath id="heartClip">
+                            <rect id="clipRect" x="0" y="200" width="200" height="200" />
+                        </clipPath>
                     </defs>
-                    <path class="heart-main" />
+                    <path class="outline"
+                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <path class="fill"
+                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
-            <div class="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
+            <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
         </div>
 
-        <!-- Section 2: Letter -->
+        <!-- Section 2: Letter Reveal -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg"
+                    onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
             <div class="paper">
                 บี๋คั้บ.. 🤍<br>
@@ -274,131 +309,164 @@
                 รักฟ้าที่สุดในโลกเลย!<br><br>
                 <b>Happy Valentine's Day .. 🤍</b>
             </div>
-            <button class="btn-next" onclick="goToFood()">ไปเลือกของกินกัน! ✨</button>
+            <button class="btn-next" onclick="goToFood()">ตามมานี่ๆ มาช่วยเลือกหน่อย ✨</button>
         </div>
 
-        <!-- Section 3: Food -->
+        <!-- Section 3: Food Choice -->
         <div class="food-section" id="foodSection">
-            <div class="hint" style="margin-bottom: 20px; font-weight: bold;">เลือกวาสนาของบี๋วันนี้สิ? 😋</div>
+            <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
             <div class="food-grid">
                 <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
-                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'">
-                    <b>ซูชิฟัวการ์</b>
+                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Food">
+                    <div class="food-info"><b>ซูชิฟัวการ์</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิไข่ปลาแซลม่อน')">
-                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'">
-                    <b>ซูชิไข่ปลาแซลม่อน</b>
+                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Food">
+                    <div class="food-info"><b>ซูชิไข่ปลาแซลม่อน</b></div>
                 </div>
                 <div class="food-card" onclick="selectFood('ซูชิท้องปลา')">
-                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'">
-                    <b>ซูชิท้องปลา</b>
+                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Food">
+                    <div class="food-info"><b>ซูชิท้องปลา</b></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const holdArea = document.getElementById('holdArea');
-        const grad1 = document.getElementById('gradOffset1');
-        const grad2 = document.getElementById('gradOffset2');
-        const heartWrapper = document.getElementById('heartWrapper');
-        const revealContent = document.getElementById('revealContent');
-        const foodSection = document.getElementById('foodSection');
-        const particles = document.getElementById('particles');
+        const clipRect = document.getElementById("clipRect");
+        const heartWrapper = document.getElementById("heartWrapper");
+        const revealContent = document.getElementById("revealContent");
+        const foodSection = document.getElementById("foodSection");
+        const particlesContainer = document.getElementById("particles");
+        const stickersContainer = document.getElementById("stickersContainer");
 
-        let progress = 0;
+        let value = 0;
         let isPressing = false;
         let isDone = false;
 
-        // จัดการ Input สำหรับ Mobile
-        holdArea.addEventListener('pointerdown', (e) => {
-            if (isDone) return;
-            isPressing = true;
-            holdArea.setPointerCapture(e.pointerId);
-            startMusic();
-        });
+        // รายการสติ๊กเกอร์เกี่ยวกับความรัก
+        const loveStickers = ['💖', '💌', '🧸', '🌹', '💑', '💝', '✨', '💍', '🕊️', '💐', '💕', '🍭'];
 
-        const stopPress = () => isPressing = false;
-        holdArea.addEventListener('pointerup', stopPress);
-        holdArea.addEventListener('pointercancel', stopPress);
-
-        function update() {
-            if (isPressing && !isDone) {
-                progress += 0.8;
-                if (progress >= 100) {
-                    progress = 100;
-                    isDone = true;
-                    onFinish();
-                }
-                // อัปเดต Gradient (เลื่อนจุดตัดสี)
-                grad1.setAttribute('offset', progress + '%');
-                grad2.setAttribute('offset', progress + '%');
+        function initFloatingStickers() {
+            // สร้างสติ๊กเกอร์ 15 ชิ้น กระจายรอบๆ
+            for (let i = 0; i < 15; i++) {
+                const s = document.createElement('div');
+                s.className = 'floating-sticker';
+                s.innerHTML = loveStickers[Math.floor(Math.random() * loveStickers.length)];
                 
-                if (Math.random() > 0.7) createParticle(true);
+                // สุ่มตำแหน่งให้อยู่ขอบๆ จอ (เลี่ยงช่วงกลาง 30%-70%)
+                let left;
+                const side = Math.random();
+                if (side < 0.5) {
+                    left = Math.random() * 25; // ฝั่งซ้าย
+                } else {
+                    left = 75 + (Math.random() * 20); // ฝั่งขวา
+                }
+                
+                const top = Math.random() * 90;
+                
+                s.style.left = left + 'vw';
+                s.style.top = top + 'vh';
+                s.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
+                
+                // สุ่มดีเลย์แอนิเมชั่นเพื่อให้ลอยไม่พร้อมกัน
+                s.style.animationDelay = (Math.random() * 5) + 's';
+                s.style.animationDuration = (5 + Math.random() * 3) + 's';
+                
+                stickersContainer.appendChild(s);
             }
-            requestAnimationFrame(update);
         }
-        update();
+        initFloatingStickers();
 
-        function onFinish() {
-            // เอฟเฟกต์พลุหัวใจ
-            for(let i=0; i<40; i++) {
-                setTimeout(() => createParticle(true), i * 40);
+        function startPress(e) {
+            if (isDone) return;
+            if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
+            isPressing = true;
+        }
+
+        function stopPress(e) {
+            isPressing = false;
+            if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
+        }
+
+        function loop() {
+            if (isPressing && !isDone) {
+                value += 0.8; 
+                if (value >= 100) {
+                    value = 100;
+                    isDone = true;
+                    finish();
+                }
+                clipRect.setAttribute("y", 200 - (value * 1.75));
+                if (Math.random() > 0.8) createParticle(true);
             }
-            
+            requestAnimationFrame(loop);
+        }
+        loop();
+
+        function finish() {
+            for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
+            heartWrapper.classList.add("hidden");
+            // เมื่อกดสำเร็จ ให้ซ่อนสติ๊กเกอร์ขอบจอไปชั่วคราวเพื่อเปิดทางให้จดหมาย
+            stickersContainer.style.transition = "opacity 1s";
+            stickersContainer.style.opacity = "0.3";
+
             setTimeout(() => {
-                heartWrapper.classList.add('hidden');
-                setTimeout(() => {
-                    heartWrapper.style.display = 'none';
-                    revealContent.classList.add('active');
-                }, 600);
-            }, 400);
+                revealContent.classList.add("active");
+            }, 700);
         }
 
         function goToFood() {
-            revealContent.classList.add('hidden');
+            revealContent.classList.add("hidden");
             setTimeout(() => {
-                revealContent.style.display = 'none';
-                foodSection.classList.add('active');
+                revealContent.style.display = "none";
+                foodSection.classList.add("active");
+                stickersContainer.style.opacity = "0.8"; // กลับมาโชว์ใหม่
             }, 600);
         }
 
-        function selectFood(name) {
-            document.querySelector('#foodSection .hint').innerHTML = `จัดไปคั้บ! เดี๋ยวพาไปกินทั้ง 3 อย่างเลยยย 💖`;
-            for(let i=0; i<20; i++) setTimeout(() => createParticle(true), i * 50);
+        function selectFood(choice) {
+            for (let i = 0; i < 20; i++) setTimeout(() => createParticle(true), i * 40);
+            const title = document.querySelector('.food-title');
+            title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
+            document.querySelectorAll('.food-card').forEach(card => {
+                card.style.pointerEvents = "none";
+                card.style.opacity = "0.7";
+            });
         }
 
         function createParticle(burst) {
-            const p = document.createElement('div');
-            p.className = 'heart-particle';
-            p.innerHTML = ['❤', '💖', '🤍', '✨', '🌸'][Math.floor(Math.random() * 5)];
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '105vh';
-            p.style.fontSize = (burst ? Math.random() * 25 + 15 : 12) + 'px';
-            
-            const duration = burst ? (Math.random() * 2 + 2) : (Math.random() * 3 + 3);
-            p.style.animationDuration = duration + 's';
-            p.style.opacity = Math.random();
-            
-            particles.appendChild(p);
-            setTimeout(() => p.remove(), duration * 1000);
+            const p = document.createElement("div");
+            p.className = "heart-particle";
+            p.innerHTML = ["❤", "💖", "🤍", "🌸"][Math.floor(Math.random() * 4)];
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.top = "105vh";
+
+            const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
+            const dur = burst ? 2 : 4;
+            p.style.animationDuration = dur + "s";
+            particlesContainer.appendChild(p);
+            setTimeout(() => p.remove(), dur * 1000);
         }
 
-        function startMusic() {
-            const bgm = document.getElementById('bgm');
-            if (bgm.paused) {
-                bgm.muted = false;
-                bgm.currentTime = 21; // เริ่มที่ท่อนฮุค
-                bgm.play().catch(e => console.log("Audio play deferred"));
-            }
-        }
-
-        // อนุภาคลอยพื้นหลัง
         setInterval(() => {
-            if(!isDone || foodSection.classList.contains('active')) createParticle(false);
-        }, 700);
+            if (foodSection.classList.contains('active')) createParticle(false);
+            else if (!isDone) createParticle(false);
+        }, 1000);
 
+        // Music Trigger
+        document.addEventListener("click", () => {
+            const bgm = document.getElementById("bgm");
+            bgm.addEventListener("loadedmetadata", () => {
+                bgm.currentTime = 21;
+                bgm.muted = false;
+                bgm.play();
+            }, { once: true });
+            bgm.load();
+        }, { once: true });
     </script>
 </body>
-
 </html>
