@@ -13,9 +13,11 @@
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
+        /* ปรับปรุงเพื่อลบแสง Highlight และปัญหาสัมผัสในมือถือ */
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important;
             user-select: none;
             -webkit-user-select: none;
             touch-action: none;
@@ -55,7 +57,6 @@
             flex-direction: column;
         }
 
-        /* --- Heart Section --- */
         .heart-wrapper {
             position: absolute;
             display: flex;
@@ -71,37 +72,36 @@
         }
 
         .heart-area {
-            width: 65vw;
-            height: 65vw;
-            max-width: 240px;
-            max-height: 240px;
+            width: 70vw;
+            height: 70vw;
+            max-width: 280px;
+            max-height: 280px;
             position: relative;
             cursor: pointer;
-            filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
+            /* ลบ Filter drop-shadow ออกชั่วคราวเพื่อเช็คความสะอาดของขอบ */
+            filter: drop-shadow(0 10px 20px rgba(255, 77, 109, 0.3));
         }
 
         svg {
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            overflow: visible; /* ป้องกันการตัดขอบเส้น Stroke */
         }
 
-        .outline {
-            fill: rgba(255, 255, 255, 0.4);
-            stroke: #fff;
-            stroke-width: 10;
+        .heart-shape {
+            fill: rgba(255, 255, 255, 0.3);
+            stroke: #ffffff;
+            stroke-width: 12;
+            stroke-linejoin: round;
         }
 
-        .fill {
+        .heart-fill-color {
             fill: var(--primary-pink);
-            stroke: #fff;
-            stroke-width: 10;
-            clip-path: url(#heartClip);
         }
 
         .hint {
-            margin-top: 20px;
-            font-size: 1.1rem;
+            margin-top: 30px;
+            font-size: 1.2rem;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             animation: pulse 2s infinite;
@@ -112,139 +112,69 @@
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section (Letter) --- */
-        .reveal-content {
+        /* Reveal & Food Section Styles */
+        .reveal-content, .food-section {
             position: absolute;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             opacity: 0;
-            transform: scale(0.5);
-            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             visibility: hidden;
-            margin-bottom: 40px;
+            transition: all 0.6s ease;
         }
 
-        .reveal-content.active {
+        .reveal-content.active, .food-section.active {
             opacity: 1;
-            transform: scale(1);
             visibility: visible;
-        }
-
-        .reveal-content.hidden {
-            opacity: 0;
-            transform: translateY(-50px);
-            pointer-events: none;
+            transform: scale(1);
         }
 
         .photo-frame {
-            width: 100%;
-            max-width: 260px;
             background: white;
             padding: 12px 12px 40px 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             transform: rotate(-2deg);
+            max-width: 250px;
         }
-
-        .photo-frame img {
-            width: 100%;
-            display: block;
-            border: 1px solid #eee;
-        }
+        
+        .photo-frame img { width: 100%; border: 1px solid #eee; }
 
         .paper {
             margin-top: -20px;
             background: #fff9f0;
-            padding: 25px;
+            padding: 20px;
             width: 90%;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
             border-left: 5px solid var(--primary-pink);
-            color: #4e342e;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
             text-align: center;
         }
 
         .btn-next {
             margin-top: 20px;
-            padding: 12px 30px;
+            padding: 12px 25px;
             background: var(--primary-pink);
             color: white;
             border: none;
             border-radius: 25px;
-            font-family: 'Sriracha', cursive;
-            font-size: 1.1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
-            animation: bounce 2s infinite;
+            font-family: 'Sriracha';
+            box-shadow: 0 5px 15px rgba(255,77,109,0.3);
         }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-            60% { transform: translateY(-3px); }
-        }
-
-        /* --- Food Selection Section --- */
-        .food-section {
-            position: absolute;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.6s ease;
-            visibility: hidden;
-        }
-
-        .food-section.active {
-            opacity: 1;
-            transform: scale(1);
-            visibility: visible;
-        }
-
-        .food-title {
-            color: white;
-            font-size: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .food-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            width: 100%;
-        }
-
+        .food-grid { width: 100%; display: grid; gap: 10px; margin-top: 15px; }
         .food-card {
             background: white;
             padding: 10px;
-            border-radius: 15px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            transition: transform 0.2s;
         }
-
-        .food-card:active { transform: scale(0.95); }
-
-        .food-card img {
-            width: 70px;
-            height: 70px;
-            border-radius: 10px;
-            object-fit: cover;
-        }
-
-        .food-info b { color: var(--primary-pink); font-size: 1.2rem; }
+        .food-card img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
 
         .heart-particle {
             position: absolute;
             pointer-events: none;
-            z-index: 2;
             animation: floatUp linear forwards;
         }
 
@@ -257,7 +187,6 @@
 </head>
 
 <body>
-
     <audio id="bgm" loop muted>
         <source src="thank-you.mp3" type="audio/mpeg">
     </audio>
@@ -265,59 +194,52 @@
     <div id="particles"></div>
 
     <div class="container">
-        <!-- Section 1: Heart Press -->
+        <!-- Section 1: Heart -->
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold" onpointerdown="startPress(event)" onpointerup="stopPress(event)"
-                onpointerleave="stopPress(event)" onpointercancel="stopPress(event)">
+            <div class="heart-area" id="hold" onpointerdown="startPress(event)" onpointerup="stopPress(event)" onpointerleave="stopPress(event)">
                 <svg viewBox="0 0 200 200">
                     <defs>
-                        <clipPath id="heartClip">
-                            <rect id="clipRect" x="0" y="200" width="200" height="200" />
+                        <!-- กำหนด ClipPath ให้เป็นรูปหัวใจพอดีเป๊ะ -->
+                        <clipPath id="heartPathClip">
+                            <path d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                         </clipPath>
                     </defs>
-                    <path class="outline"
-                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    <path class="fill"
+                    
+                    <!-- 1. พื้นหลังหัวใจสีขาวจางๆ -->
+                    <path class="heart-shape" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    
+                    <!-- 2. ส่วนที่เติมสีชมพู (ใช้ ClipPath ครอบเพื่อไม่ให้สีแลบออกไปข้างนอก) -->
+                    <g clip-path="url(#heartPathClip)">
+                        <!-- สี่เหลี่ยมสีชมพูที่จะเลื่อนขึ้นมาแทนที่ -->
+                        <rect id="clipRect" x="0" y="180" width="200" height="200" class="heart-fill-color" />
+                    </g>
+
+                    <!-- 3. เส้นขอบหัวใจสีขาวทับด้านบนสุดเพื่อความคมชัด -->
+                    <path fill="none" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"
                         d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
             <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
         </div>
 
-        <!-- Section 2: Letter Reveal -->
+        <!-- Section 2: Content -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="max-fah.jpg"
-                    onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=400'">
             </div>
             <div class="paper">
-                บี๋คั้บ.. 🤍<br>
-                นี่คือวาเลนไทน์ครั้งแรกของคู่เรานะ<br>
-                ผ่านมา 9 เดือนกว่าๆ แล้วเนาะ<br>
-                ขอบคุณที่ยังอยู่เคียงข้างกันตลอดนะ<br>
-                อยู่ด้วยกันให้ครบ 99.99 ปีเลยนะ<br>
-                รักฟ้าที่สุดในโลกเลย!<br><br>
-                <b>Happy Valentine's Day .. 🤍</b>
+                บี๋คั้บ.. 🤍 วาเลนไทน์ปีแรกของเราเนาะ<br>
+                ขอบคุณที่น่ารักกับเค้าเสมอมานะ<br>
+                รักฟ้าที่สุดเลยยยยยย!
             </div>
-            <button class="btn-next" onclick="goToFood()">ตามมานี่ๆ มาช่วยเลือกหน่อย ✨</button>
+            <button class="btn-next" onclick="goToFood()">ไปเลือกของกินกัน! ✨</button>
         </div>
 
-        <!-- Section 3: Food Choice -->
+        <!-- Section 3: Food -->
         <div class="food-section" id="foodSection">
-            <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
             <div class="food-grid">
-                <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
-                    <img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิฟัวการ์</b></div>
-                </div>
-                <div class="food-card" onclick="selectFood('ซูชิไข่ปลาแซลม่อน')">
-                    <img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิไข่ปลาแซลม่อน</b></div>
-                </div>
-                <div class="food-card" onclick="selectFood('ซูชิท้องปลา')">
-                    <img src="2.jpg" onerror="this.src='https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=200&q=80'" alt="Food">
-                    <div class="food-info"><b>ซูชิท้องปลา</b></div>
-                </div>
+                <div class="food-card" onclick="selectFood()"><img src="1.jpg" onerror="this.src='https://images.unsplash.com/photo-1553621042-f6e147245754?w=100'"><b>ซูชิฟัวการ์</b></div>
+                <div class="food-card" onclick="selectFood()"><img src="3.jpg" onerror="this.src='https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=100'"><b>ซูชิไข่ปลาแซลม่อน</b></div>
             </div>
         </div>
     </div>
@@ -328,6 +250,7 @@
         const revealContent = document.getElementById("revealContent");
         const foodSection = document.getElementById("foodSection");
         const particlesContainer = document.getElementById("particles");
+        const hold = document.getElementById("hold");
 
         let value = 0;
         let isPressing = false;
@@ -335,55 +258,51 @@
 
         function startPress(e) {
             if (isDone) return;
+            e.preventDefault();
             if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
             isPressing = true;
         }
 
         function stopPress(e) {
             isPressing = false;
-            if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
+            if (e.pointerType === 'touch' && hold.hasPointerCapture(e.pointerId)) {
+                hold.releasePointerCapture(e.pointerId);
+            }
         }
 
         function loop() {
             if (isPressing && !isDone) {
-                // ปรับความเร็วให้น้อยลง (จากเดิม 1.8 เหลือ 0.8) เพื่อให้กดแช่นานขึ้น
                 value += 0.8; 
                 if (value >= 100) {
                     value = 100;
                     isDone = true;
                     finish();
                 }
-                clipRect.setAttribute("y", 200 - (value * 1.75));
-                if (Math.random() > 0.8) createParticle(true);
+                // เลื่อนสี่เหลี่ยมสีชมพูขึ้นตามระดับ
+                clipRect.setAttribute("y", 180 - (value * 1.6));
+                if (Math.random() > 0.7) createParticle(true);
             }
             requestAnimationFrame(loop);
         }
         loop();
 
         function finish() {
-            for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
             heartWrapper.classList.add("hidden");
             setTimeout(() => {
                 revealContent.classList.add("active");
-            }, 700);
+            }, 600);
         }
 
         function goToFood() {
-            revealContent.classList.add("hidden");
+            revealContent.classList.remove("active");
             setTimeout(() => {
                 revealContent.style.display = "none";
                 foodSection.classList.add("active");
             }, 600);
         }
 
-        function selectFood(choice) {
-            for (let i = 0; i < 20; i++) setTimeout(() => createParticle(true), i * 40);
-            const title = document.querySelector('.food-title');
-            title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
-            document.querySelectorAll('.food-card').forEach(card => {
-                card.style.pointerEvents = "none";
-                card.style.opacity = "0.7";
-            });
+        function selectFood() {
+            alert("เดี๋ยวพาไปกินทุกอย่างเลยยย! 💖");
         }
 
         function createParticle(burst) {
@@ -392,31 +311,16 @@
             p.innerHTML = ["❤", "💖", "🤍", "🌸"][Math.floor(Math.random() * 4)];
             p.style.left = Math.random() * 100 + "vw";
             p.style.top = "105vh";
-
-            const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
-            p.style.color = colors[Math.floor(Math.random() * colors.length)];
-
             p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
-            const dur = burst ? 2 : 4;
-            p.style.animationDuration = dur + "s";
+            p.style.animationDuration = (burst ? 2 : 4) + "s";
             particlesContainer.appendChild(p);
-            setTimeout(() => p.remove(), dur * 1000);
+            setTimeout(() => p.remove(), 4000);
         }
 
-        setInterval(() => {
-            if (foodSection.classList.contains('active')) createParticle(false);
-            else if (!isDone) createParticle(false);
-        }, 1000);
-
-        // Music Trigger
         document.addEventListener("click", () => {
             const bgm = document.getElementById("bgm");
-            bgm.addEventListener("loadedmetadata", () => {
-                bgm.currentTime = 21;
-                bgm.muted = false;
-                bgm.play();
-            }, { once: true });
-            bgm.load();
+            bgm.muted = false;
+            bgm.play().catch(() => {});
         }, { once: true });
     </script>
 </body>
