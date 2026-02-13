@@ -9,16 +9,16 @@
     <style>
         :root {
             --primary-pink: #ff4d6d;
-            --soft-cream: #fff9f0;
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
+        /* สำคัญที่สุด: ห้ามเลือกข้อความ ห้ามขยับจอ */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            /* ป้องกันการเลือกข้อความหรือเมนูเด้งเวลาดูในไลน์ */
             user-select: none;
             -webkit-user-select: none;
+            touch-action: none; /* ห้าม LINE แย่งจับการรูดหน้าจอ */
         }
 
         body {
@@ -32,8 +32,6 @@
             align-items: center;
             font-family: 'Sriracha', cursive, sans-serif;
             overflow: hidden;
-            /* สำคัญมาก: ป้องกันบราวเซอร์ไลน์แย่งจับ Event */
-            touch-action: none;
         }
 
         #particles {
@@ -61,49 +59,47 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.8s ease-in-out;
+            transition: all 0.6s ease;
         }
 
         .heart-wrapper.fade-away {
             opacity: 0;
-            transform: translateY(-100px) scale(0);
+            transform: scale(0.2) translateY(-100px);
+            pointer-events: none;
         }
 
+        /* ขยายพื้นที่กดให้กว้างขึ้น */
         .heart-area {
-            width: 60vw;
-            height: 60vw;
-            max-width: 220px;
-            max-height: 220px;
+            width: 65vw;
+            height: 65vw;
+            max-width: 240px;
+            max-height: 240px;
             position: relative;
+            cursor: pointer;
             filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
         }
 
         svg {
             width: 100%;
             height: 100%;
-            display: block;
-            overflow: visible;
+            pointer-events: none; /* ให้ SVG เป็นแค่ภาพ พื้นที่กดคือ heart-area */
         }
 
-        /* ปรับให้เขียน Path ไว้ใน HTML แทน CSS เพื่อให้ LINE อ่านได้ชัวร์ๆ */
         .outline {
-            fill: rgba(255, 255, 255, 0.3);
+            fill: rgba(255, 255, 255, 0.4);
             stroke: #fff;
             stroke-width: 10;
-            stroke-linejoin: round;
         }
 
         .fill {
             fill: var(--primary-pink);
             stroke: #fff;
             stroke-width: 10;
-            stroke-linejoin: round;
-            /* ใช้คลิปแบบดั้งเดิมที่บราวเซอร์เก่าๆ รองรับได้ดีกว่า */
             clip-path: url(#heartClip);
         }
 
         .hint {
-            margin-top: 25px;
+            margin-top: 20px;
             font-size: 1.1rem;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -111,11 +107,11 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
+            0%, 100% { opacity: 0.6; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.05); }
         }
 
-        /* --- Reveal Section --- */
+        /* Reveal Section */
         .reveal-content {
             position: absolute;
             width: 100%;
@@ -123,8 +119,8 @@
             flex-direction: column;
             align-items: center;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.5);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
             visibility: hidden;
         }
 
@@ -138,30 +134,20 @@
             width: 100%;
             max-width: 260px;
             background: white;
-            padding: 12px 12px 45px 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            position: relative;
+            padding: 12px 12px 40px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transform: rotate(-2deg);
         }
 
-        .photo-frame img {
-            width: 100%;
-            display: block;
-            height: auto;
-        }
+        .photo-frame img { width: 100%; display: block; }
 
         .paper {
             margin-top: -20px;
-            background: var(--soft-cream);
-            padding: 30px 20px;
-            border-radius: 2px;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            box-shadow: 5px 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 320px;
-            border-left: 6px solid var(--primary-pink);
-            transform: rotate(1deg);
+            background: #fff9f0;
+            padding: 25px;
+            width: 90%;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-pink);
             color: #4e342e;
         }
 
@@ -173,9 +159,9 @@
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0) opacity: 0; }
+            0% { transform: translateY(0); opacity: 0; }
             10% { opacity: 0.8; }
-            100% { transform: translateY(-110vh) opacity: 0; }
+            100% { transform: translateY(-100vh); opacity: 0; }
         }
     </style>
 </head>
@@ -185,7 +171,11 @@
 
     <div class="container">
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold">
+            <div class="heart-area" id="hold" 
+                 onpointerdown="startPress(event)" 
+                 onpointerup="stopPress(event)" 
+                 onpointerleave="stopPress(event)"
+                 onpointercancel="stopPress(event)">
                 <svg viewBox="0 0 200 200">
                     <defs>
                         <clipPath id="heartClip">
@@ -196,12 +186,12 @@
                     <path class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
-            <div class="hint" id="hint">บี๋ลองกดหัวใจให้เต็มดูนะคั้บบ 🤍</div>
+            <div class="hint" id="hint">จิ้มค้างที่หัวใจนะ.. 🤍</div>
         </div>
 
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="max-fah.jpg" alt="Valentine" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
             <div class="paper">
                 บี๋คั้บ.. 🤍<br>
@@ -218,26 +208,68 @@
     </div>
 
 <script>
-    const hold = document.getElementById("hold");
     const clipRect = document.getElementById("clipRect");
     const heartWrapper = document.getElementById("heartWrapper");
     const revealContent = document.getElementById("revealContent");
     const particlesContainer = document.getElementById("particles");
 
     let value = 0;
-    let pressing = false;
-    let done = false;
+    let isPressing = false;
+    let isDone = false;
 
-    // แก้ปัญหาเรื่อง Touch บน LINE
-    function start(e) {
-        if (done) return;
-        // ป้องกันบราวเซอร์ดึงหน้าจอ (Pull to refresh)
-        if (e.cancelable) e.preventDefault();
-        pressing = true;
+    // ระบบตรวจจับการกดแบบ Pointer (เทพสุดสำหรับมือถือ)
+    function startPress(e) {
+        if (isDone) return;
+        // ป้องกัน Browser แย่ง Event
+        if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
+        isPressing = true;
     }
 
-    function stop() {
-        pressing = false;
+    function stopPress(e) {
+        isPressing = false;
+        if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
     }
 
-    // Loop เติมหัว
+    // Loop คำนวณความเร็ว (60fps)
+    function loop() {
+        if (isPressing && !isDone) {
+            value += 1.8; // ปรับความเร็วตรงนี้
+            if (value >= 100) {
+                value = 100;
+                isDone = true;
+                finish();
+            }
+            // คำนวณตำแหน่ง Y (200 คือล่างสุด, 25 คือบนสุดของหัวใจ)
+            clipRect.setAttribute("y", 200 - (value * 1.75));
+            if(Math.random() > 0.8) createParticle(true);
+        }
+        requestAnimationFrame(loop);
+    }
+    loop();
+
+    function finish() {
+        for(let i=0; i<30; i++) setTimeout(() => createParticle(true), i * 30);
+        heartWrapper.classList.add("fade-away");
+        setTimeout(() => {
+            revealContent.classList.add("active");
+        }, 700);
+    }
+
+    function createParticle(burst) {
+        const p = document.createElement("div");
+        p.className = "heart-particle";
+        p.innerHTML = "❤";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.top = "105vh";
+        p.style.color = "#fff";
+        p.style.fontSize = (burst ? 20 : 10) + "px";
+        const dur = burst ? 2 : 4;
+        p.style.animationDuration = dur + "s";
+        particlesContainer.appendChild(p);
+        setTimeout(() => p.remove(), dur * 1000);
+    }
+    setInterval(() => { if(!isDone) createParticle(false); }, 1000);
+</script>
+
+</body>
+</html>
