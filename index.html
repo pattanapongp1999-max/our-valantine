@@ -12,13 +12,12 @@
             --bg-gradient: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
         }
 
-        /* สำคัญที่สุด: ห้ามเลือกข้อความ ห้ามขยับจอ */
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: none; /* ห้าม LINE แย่งจับการรูดหน้าจอ */
+            touch-action: none; 
         }
 
         body {
@@ -68,7 +67,6 @@
             pointer-events: none;
         }
 
-        /* ขยายพื้นที่กดให้กว้างขึ้น */
         .heart-area {
             width: 65vw;
             height: 65vw;
@@ -82,7 +80,7 @@
         svg {
             width: 100%;
             height: 100%;
-            pointer-events: none; /* ให้ SVG เป็นแค่ภาพ พื้นที่กดคือ heart-area */
+            pointer-events: none;
         }
 
         .outline {
@@ -103,12 +101,8 @@
             font-size: 1.1rem;
             color: #fff;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
+            text-align: center;
+            transition: opacity 0.3s ease;
         }
 
         /* Reveal Section */
@@ -149,6 +143,7 @@
             box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
             border-left: 5px solid var(--primary-pink);
             color: #4e342e;
+            text-align: center;
         }
 
         .heart-particle {
@@ -162,6 +157,17 @@
             0% { transform: translateY(0); opacity: 0; }
             10% { opacity: 0.8; }
             100% { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* เอฟเฟกต์สั่นตอนรีเซ็ตรอบแรก */
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
         }
     </style>
 </head>
@@ -186,7 +192,7 @@
                     <path class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
-            <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
+            <div class="hint" id="hint">จิ้มค้างบอกรักเค้าหน่อยนะ 🤍</div>
         </div>
 
         <div class="reveal-content" id="revealContent">
@@ -212,34 +218,33 @@
     const heartWrapper = document.getElementById("heartWrapper");
     const revealContent = document.getElementById("revealContent");
     const particlesContainer = document.getElementById("particles");
+    const hint = document.getElementById("hint");
+    const heartArea = document.getElementById("hold");
 
     let value = 0;
     let isPressing = false;
     let isDone = false;
+    let currentRound = 1;
+    const maxRounds = 2;
 
-    // ระบบตรวจจับการกดแบบ Pointer (เทพสุดสำหรับมือถือ)
     function startPress(e) {
         if (isDone) return;
-        // ป้องกัน Browser แย่ง Event
-        if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
+        if (e.pointerType === 'touch') heartArea.setPointerCapture(e.pointerId);
         isPressing = true;
     }
 
     function stopPress(e) {
         isPressing = false;
-        if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
+        if (e.pointerType === 'touch') heartArea.releasePointerCapture(e.pointerId);
     }
 
-    // Loop คำนวณความเร็ว (60fps)
     function loop() {
         if (isPressing && !isDone) {
-            value += 1.8; // ปรับความเร็วตรงนี้
+            value += 1.8; 
             if (value >= 100) {
                 value = 100;
-                isDone = true;
-                finish();
+                handleCompletion();
             }
-            // คำนวณตำแหน่ง Y (200 คือล่างสุด, 25 คือบนสุดของหัวใจ)
             clipRect.setAttribute("y", 200 - (value * 1.75));
             if(Math.random() > 0.8) createParticle(true);
         }
@@ -247,29 +252,40 @@
     }
     loop();
 
-    function finish() {
-        for(let i=0; i<30; i++) setTimeout(() => createParticle(true), i * 30);
-        heartWrapper.classList.add("fade-away");
-        setTimeout(() => {
-            revealContent.classList.add("active");
-        }, 700);
+    function handleCompletion() {
+        if (currentRound < maxRounds) {
+            // จบรอบแรก: ระเบิดหัวใจแล้วรีเซ็ต
+            isPressing = false;
+            triggerBurst(20);
+            
+            // เอฟเฟกต์เขย่าและล้างค่า
+            heartArea.classList.add("shake");
+            setTimeout(() => {
+                value = 0;
+                clipRect.setAttribute("y", 200);
+                hint.innerHTML = "เก่งมากคั้บ! ขออีกทีนึงนะ 🤍";
+                currentRound++;
+                heartArea.classList.remove("shake");
+            }, 600);
+            
+        } else {
+            // จบรอบสุดท้าย
+            isDone = true;
+            triggerBurst(40);
+            heartWrapper.classList.add("fade-away");
+            setTimeout(() => {
+                revealContent.classList.add("active");
+            }, 700);
+        }
+    }
+
+    function triggerBurst(count) {
+        for(let i=0; i<count; i++) {
+            setTimeout(() => createParticle(true), i * 30);
+        }
     }
 
     function createParticle(burst) {
         const p = document.createElement("div");
         p.className = "heart-particle";
-        p.innerHTML = "❤";
-        p.style.left = Math.random() * 100 + "vw";
-        p.style.top = "105vh";
-        p.style.color = "#fff";
-        p.style.fontSize = (burst ? 20 : 10) + "px";
-        const dur = burst ? 2 : 4;
-        p.style.animationDuration = dur + "s";
-        particlesContainer.appendChild(p);
-        setTimeout(() => p.remove(), dur * 1000);
-    }
-    setInterval(() => { if(!isDone) createParticle(false); }, 1000);
-</script>
-
-</body>
-</html>
+        p
