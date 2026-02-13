@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -79,21 +80,45 @@
             filter: drop-shadow(0 8px 15px rgba(255, 77, 109, 0.3));
         }
 
-        svg { width: 100%; height: 100%; pointer-events: none; }
-        .outline { fill: rgba(255, 255, 255, 0.4); stroke: #fff; stroke-width: 10; }
-        .fill { fill: var(--primary-pink); stroke: #fff; stroke-width: 10; clip-path: url(#heartClip); }
+        svg {
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .outline {
+            fill: rgba(255, 255, 255, 0.4);
+            stroke: #fff;
+            stroke-width: 10;
+        }
+
+        .fill {
+            fill: var(--primary-pink);
+            stroke: #fff;
+            stroke-width: 10;
+            clip-path: url(#heartClip);
+        }
 
         .hint {
             margin-top: 20px;
             font-size: 1.1rem;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
         }
 
         /* --- Reveal Section (Letter) --- */
@@ -127,18 +152,22 @@
             max-width: 260px;
             background: white;
             padding: 12px 12px 40px 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transform: rotate(-2deg);
         }
 
-        .photo-frame img { width: 100%; display: block; border: 1px solid #eee; }
+        .photo-frame img {
+            width: 100%;
+            display: block;
+            border: 1px solid #eee;
+        }
 
         .paper {
             margin-top: -20px;
             background: #fff9f0;
             padding: 25px;
             width: 90%;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
             border-left: 5px solid var(--primary-pink);
             color: #4e342e;
             text-align: center;
@@ -159,9 +188,22 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-            60% { transform: translateY(-3px); }
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-5px);
+            }
+
+            60% {
+                transform: translateY(-3px);
+            }
         }
 
         /* --- Food Selection Section --- */
@@ -186,7 +228,7 @@
         .food-title {
             color: white;
             font-size: 1.5rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-bottom: 20px;
             text-align: center;
         }
@@ -205,12 +247,14 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             transition: transform 0.2s;
         }
 
-        .food-card:active { transform: scale(0.95); }
+        .food-card:active {
+            transform: scale(0.95);
+        }
 
         .food-card img {
             width: 70px;
@@ -219,7 +263,10 @@
             object-fit: cover;
         }
 
-        .food-info b { color: var(--primary-pink); font-size: 1.2rem; }
+        .food-info b {
+            color: var(--primary-pink);
+            font-size: 1.2rem;
+        }
 
         /* --- Particles --- */
         .heart-particle {
@@ -230,32 +277,46 @@
         }
 
         @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            100% { transform: translateY(-110vh); opacity: 0; }
+            0% {
+                transform: translateY(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-110vh);
+                opacity: 0;
+            }
         }
     </style>
 </head>
+
 <body>
+
+    <audio id="bgm" loop muted>
+        <source src="thank-you.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="particles"></div>
 
     <div class="container">
         <!-- Section 1: Heart Press -->
         <div class="heart-wrapper" id="heartWrapper">
-            <div class="heart-area" id="hold" 
-                 onpointerdown="startPress(event)" 
-                 onpointerup="stopPress(event)" 
-                 onpointerleave="stopPress(event)"
-                 onpointercancel="stopPress(event)">
+            <div class="heart-area" id="hold" onpointerdown="startPress(event)" onpointerup="stopPress(event)"
+                onpointerleave="stopPress(event)" onpointercancel="stopPress(event)">
                 <svg viewBox="0 0 200 200">
                     <defs>
                         <clipPath id="heartClip">
                             <rect id="clipRect" x="0" y="200" width="200" height="200" />
                         </clipPath>
                     </defs>
-                    <path class="outline" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
-                    <path class="fill" d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <path class="outline"
+                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
+                    <path class="fill"
+                        d="M100,165 C100,165 20,120 20,70 C20,40 45,25 65,25 C85,25 100,45 100,45 C100,45 115,25 135,25 C155,25 180,40 180,70 C180,120 100,165 100,165 Z" />
                 </svg>
             </div>
             <div class="hint" id="hint">บี๋ลองกดค้างที่หัวใจดูนะ.. 🤍</div>
@@ -264,7 +325,8 @@
         <!-- Section 2: Letter Reveal -->
         <div class="reveal-content" id="revealContent">
             <div class="photo-frame">
-                <img src="max-fah.jpg" onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
+                <img src="max-fah.jpg"
+                    onerror="this.src='https://images.unsplash.com/photo-1518199266791-739949401341?q=80&w=600&auto=format&fit=crop'">
             </div>
             <div class="paper">
                 บี๋คั้บ.. 🤍<br>
@@ -275,12 +337,12 @@
                 รักฟ้าที่สุดในโลกเลย!<br><br>
                 <b>Happy Valentine's Day .. 🤍</b>
             </div>
-            <button class="btn-next" onclick="goToFood()">ไปต่อกันเลย ✨</button>
+            <button class="btn-next" onclick="goToFood()">ตามมานี่ๆ มาช่วยเลือกหน่อย ✨</button>
         </div>
 
         <!-- Section 3: Food Choice -->
         <div class="food-section" id="foodSection">
-            <div class="food-title">เห็นบอกว่า รอวาสนา อะ เลือกสิ? 😋</div>
+            <div class="food-title">เห็นชอบบอกว่า รอวาสนา อะ ไหนลองเลือกสิ? 😋</div>
             <div class="food-grid">
                 <div class="food-card" onclick="selectFood('ซูชิฟัวการ์')">
                     <img src="1.jpg" alt="Shabu">
@@ -298,91 +360,106 @@
         </div>
     </div>
 
-<script>
-    const clipRect = document.getElementById("clipRect");
-    const heartWrapper = document.getElementById("heartWrapper");
-    const revealContent = document.getElementById("revealContent");
-    const foodSection = document.getElementById("foodSection");
-    const particlesContainer = document.getElementById("particles");
+    <script>
+        const clipRect = document.getElementById("clipRect");
+        const heartWrapper = document.getElementById("heartWrapper");
+        const revealContent = document.getElementById("revealContent");
+        const foodSection = document.getElementById("foodSection");
+        const particlesContainer = document.getElementById("particles");
 
-    let value = 0;
-    let isPressing = false;
-    let isDone = false;
+        let value = 0;
+        let isPressing = false;
+        let isDone = false;
 
-    function startPress(e) {
-        if (isDone) return;
-        if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
-        isPressing = true;
-    }
-
-    function stopPress(e) {
-        isPressing = false;
-        if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
-    }
-
-    function loop() {
-        if (isPressing && !isDone) {
-            value += 1.8;
-            if (value >= 100) {
-                value = 100;
-                isDone = true;
-                finish();
-            }
-            clipRect.setAttribute("y", 200 - (value * 1.75));
-            if(Math.random() > 0.8) createParticle(true);
+        function startPress(e) {
+            if (isDone) return;
+            if (e.pointerType === 'touch') hold.setPointerCapture(e.pointerId);
+            isPressing = true;
         }
-        requestAnimationFrame(loop);
-    }
-    loop();
 
-    function finish() {
-        for(let i=0; i<30; i++) setTimeout(() => createParticle(true), i * 30);
-        heartWrapper.classList.add("hidden");
-        setTimeout(() => {
-            revealContent.classList.add("active");
-        }, 700);
-    }
+        function stopPress(e) {
+            isPressing = false;
+            if (e.pointerType === 'touch') hold.releasePointerCapture(e.pointerId);
+        }
 
-    function goToFood() {
-        revealContent.classList.add("hidden");
-        setTimeout(() => {
-            revealContent.style.display = "none";
-            foodSection.classList.add("active");
-        }, 600);
-    }
+        function loop() {
+            if (isPressing && !isDone) {
+                value += 1.8;
+                if (value >= 100) {
+                    value = 100;
+                    isDone = true;
+                    finish();
+                }
+                clipRect.setAttribute("y", 200 - (value * 1.75));
+                if (Math.random() > 0.8) createParticle(true);
+            }
+            requestAnimationFrame(loop);
+        }
+        loop();
 
-    function selectFood(choice) {
-        for(let i=0; i<20; i++) setTimeout(() => createParticle(true), i * 40);
-        const title = document.querySelector('.food-title');
-        title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
-        document.querySelectorAll('.food-card').forEach(card => {
-            card.style.pointerEvents = "none";
-            card.style.opacity = "0.7";
-        });
-    }
+        function finish() {
+            for (let i = 0; i < 30; i++) setTimeout(() => createParticle(true), i * 30);
+            heartWrapper.classList.add("hidden");
+            setTimeout(() => {
+                revealContent.classList.add("active");
+            }, 700);
+        }
 
-    function createParticle(burst) {
-        const p = document.createElement("div");
-        p.className = "heart-particle";
-        p.innerHTML = ["❤","💖","🤍","🌸"][Math.floor(Math.random()*4)];
-        p.style.left = Math.random() * 100 + "vw";
-        p.style.top = "105vh";
-        
-        const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
-        p.style.color = colors[Math.floor(Math.random()*colors.length)];
-        
-        p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
-        const dur = burst ? 2 : 4;
-        p.style.animationDuration = dur + "s";
-        particlesContainer.appendChild(p);
-        setTimeout(() => p.remove(), dur * 1000);
-    }
-    
-    setInterval(() => { 
-        if(foodSection.classList.contains('active')) createParticle(false);
-        else if(!isDone) createParticle(false); 
-    }, 1000);
-</script>
+        function goToFood() {
+            revealContent.classList.add("hidden");
+            setTimeout(() => {
+                revealContent.style.display = "none";
+                foodSection.classList.add("active");
+            }, 600);
+        }
+
+        function selectFood(choice) {
+            for (let i = 0; i < 20; i++) setTimeout(() => createParticle(true), i * 40);
+            const title = document.querySelector('.food-title');
+            title.innerHTML = `เลือกแค่อย่างเดียวอ่อ ไม่ดิ แฟนเค้าต้องได้กินหมดเลยยยย 💖`;
+            document.querySelectorAll('.food-card').forEach(card => {
+                card.style.pointerEvents = "none";
+                card.style.opacity = "0.7";
+            });
+        }
+
+        function createParticle(burst) {
+            const p = document.createElement("div");
+            p.className = "heart-particle";
+            p.innerHTML = ["❤", "💖", "🤍", "🌸"][Math.floor(Math.random() * 4)];
+            p.style.left = Math.random() * 100 + "vw";
+            p.style.top = "105vh";
+
+            const colors = ["#fff", "#ff4d6d", "#ffb3c1", "#ff758f"];
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+            p.style.fontSize = (burst ? Math.random() * 20 + 15 : 10) + "px";
+            const dur = burst ? 2 : 4;
+            p.style.animationDuration = dur + "s";
+            particlesContainer.appendChild(p);
+            setTimeout(() => p.remove(), dur * 1000);
+        }
+
+        setInterval(() => {
+            if (foodSection.classList.contains('active')) createParticle(false);
+            else if (!isDone) createParticle(false);
+        }, 1000);
+    </script>
+
+        <script>
+        document.addEventListener("click", () => {
+            const bgm = document.getElementById("bgm");
+
+            bgm.addEventListener("loadedmetadata", () => {
+                bgm.currentTime = 50;
+                bgm.muted = false;
+                bgm.play();
+            }, { once: true });
+
+            bgm.load();
+        }, { once: true });
+    </script>
 
 </body>
+
 </html>
